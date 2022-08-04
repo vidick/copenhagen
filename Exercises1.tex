@@ -1,0 +1,124 @@
+\chapter{}
+
+
+\section{Warm-up}
+
+\begin{exercise}
+For $\mX=\mY=\mA=\mB=\{0,1\}$, give an example of a strategy that is non-signaling but is not classical. 
+\end{exercise}
+
+
+\begin{exercise}
+\begin{enumerate}
+\item Show that there is a classical strategy which succeeds in the game $\mG_\CHSH$ with probability $3/4$.
+\item Show that there is a non-signaling strategy which succeeds in $\mG_\CHSH$ with probability $1$.  
+\item Show that $3/4$ is best achievable for classical strategies. \emph{[Hint: first consider classical deterministic strategies. Such a strategy is represented by $4$ bits only.]}
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+What is the smallest possible size for the question and answer sets in a game whose non-signaling value is strictly larger than its classical value? And its quantum value? 
+\end{exercise}
+
+\begin{exercise}
+Say that a game is \emph{nontrivial} if all pairs of questions with $\pi(x,y)>0$ have at least one accepting answer to them. For a nontrivial XOR game $\mG$, show that the non-signaling bias satisfies $\beta^{ns}(\mG)=1$.
+\end{exercise}
+
+\section{Tirelson's bound, and theorem}
+
+
+\begin{exercise}
+Let $A_0,A_1$ and $B_0,B_1$ be observables on $\C^d$. Show that
+\begin{align}
+(A_0\otimes B_0 + A_0\otimes B_1 + A_1\otimes B_0 - A_1\otimes B_1 )^2 &=( (A_0+A_1)\otimes B_0 + (A_0-A_1)\otimes B_1 )^2\label{eq:bellop}\\
+&= 4\Id\otimes \Id + (A_1A_0-A_0A_1)\otimes (B_0B_1-B_1B_0)\;.\notag
+\end{align}
+Deduce a new proof of Tsirelson's upper bound on the quantum bias of the CHSH game. 
+\end{exercise}
+
+\begin{exercise}\label{ex:tsirelson}
+\begin{enumerate}
+\item For any $d\geq 1$, show that there exists Hermitian matrices $C_1,\ldots,C_d \in \C^{D\times D}$ where $D=2^{\lfloor d/2\rfloor}$ such that $C_i^2=\Id$ for all $i$, and $\{C_i,C_j\}=C_iC_j+C_jC_i=0$ for all $i\neq j$.
+\item For $u,v \in \R^d$ let $U = \sum_i u_i C_i$ and $V=\sum_i v_i C_i$. Give simple expressions for $U^2$, $C^2$, and $\bra{\phi_D} U\otimes V \ket{\phi_D}$, where $\ket{\phi_D}$ is the maximally entangled state in dimension $D$.
+\item Show that given a vector solution to SDP($\mG$) it is always possible to find a quantum strategy that achieves exactly the same value. (Be careful with complex numbers!)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+Grothendieck's inequality states that there exists a universal constant $K_G^\R\in\R$ such that for any integer $n$ and any $M=(M_{ij})\in \R^{n\times n}$, 
+\[\sup_{\substack{d,\;\vec{u}_i,\vec{v}_j\in \C^{d}\\ \|\vec{u}_i\|,\|\vec{v}_j\|\leq 1}} \Big|\sum_{i,j} \; M_{ij}\, \vec{u}_i\cdot \vec{v}_j \Big|\,\leq\, K_G\, \max_{x_i,y_j\in [-1,1]} \Big|\sum_{i,j} \; M{ij}\, x_i y_j \Big|\;.\]
+The constant $K_G^\R$ is known to satisfy $K_G^\R \leq 1.782\ldots$.
+Furthermore, if $M=(M_{ij})\in \C^{n\times n}$ and supremum on the right-hand side is taken over all complex $x_i,y_j\in \C$ such that $|x_i|,|y_j|\leq 1$ then the inequality holds with an improved constant $K_G^\C < K_G^\R$ such that $K_G^\C \leq 1.405\ldots$.
+\begin{enumerate}
+\item What is the best constant $K$ such that $\beta^*(\mG) \leq K \beta(\mG)$, for any XOR game $\mG$?
+\end{enumerate}
+\end{exercise}
+
+
+
+\begin{exercise}
+Suppose that $\mG$ is an XOR game such that $\beta^*(\mG)=1$. Show that $\beta(\mG)=1$. 
+\end{exercise}
+
+\section{Complexity aspects}
+
+\begin{exercise}
+Show that exact computation of the classical bias of an XOR game is NP-hard. (Formally, this should be made in a decision problem --- for example, show that there exists a real $a$ such that deciding if $\beta(\mG)\geq a$ or $\beta(\mG)<a$ is NP-hard.)
+\end{exercise}
+
+\begin{exercise}
+Relate the maximum success probability in the clause-vs-variable game to the largest number of clauses of $\varphi$ that can be simultaneously satisfied by any assignment. Your relation need not be perfectly tight, but it should at least imply that the maximum success probability is $1$ if and only if the formula is satisfiable. 
+\end{exercise}
+
+\section{Parallel repetition of XOR games}
+
+\begin{exercise}
+Given two XOR games $\mG_1 = (\mX_1,\mY_1,\mA_1,\mB_1,\pi_1,V_1)$ and  $\mG_2 = (\mX_2,\mY_2,\mA_2,\mB_2,\pi_2,V_2)$ define the AND game $\mG = \mG_1\wedge \mG_2$ by setting $\mX = \mX_1\times \mX_2$, $\mY = \mY_1\times \mY_2$, $\mA = \mA_1\times \mA_2$, $\mB = \mB_1\times \mB_2$, 
+\begin{equation}\label{eq:pi-parallel}
+\pi((x_1,x_2),(y_1,y_2))\,=\,\pi_1(x_1,y_1)\pi_2(x_2,y_2)
+\end{equation}
+ and 
+\[ V((x_1,x_2),(y_1,y_2),(a_1,a_2),(b_1,b_2))\,=\, V_1(x_1,y_1,a_1,b_1) V_2(x_2,y_2,a_2,b_2)\;.\]
+In words, the game $\mG$ corresponds to playing $\mG_1$ and $\mG_2$ ``in parallel'' by sending one pair of questions for each game and accepting if and only if both pairs of questions are answered correctly.  The goal of this exercise is to study how the bias of $\mG$ relates to that of $\mG_1$ and $\mG_2$. 
+\begin{enumerate}
+\item Consider the following nonlocal game $\mG_F$. In this game we have $\mX=\mY=\mA=\mB=\{0,1\}$, $\pi$ is uniform over $\{(0,0),(0,1),(1,0)\}$ and we have $V(x,y,a,b) = 1$ if $(a\vee x) \neq (b \vee y)$ and $0$ otherwise. 
+\begin{enumerate}
+\item Is $\mG_F$ an XOR game? 
+\item Compute $\omega(\mG_F)$. 
+\item Show that $\omega(\mG_F \wedge \mG_F)= \omega(\mG_F)$. 
+\end{enumerate}
+\end{enumerate}
+The previous question shows that there are nonlocal games whose value does not decrease under repetition. Moreover, it is possible (but harder) to show that the quantum value of $\mG_F$ also does not decrease under repetition. 
+
+In the remainder of the exercise we show that this does not happen for the quantum value of an XOR game $\mG$. 
+\begin{enumerate}
+\item[2.] Show that the quantum bias $\beta^*(\mG)$ can be expressed as the optimum of the following semidefinite program
+\begin{align*}
+ \beta^*(\mG) \,=\, \max \;&  \sum_{i,j}\; G_{ij} M_{ij} \\
+s.t. \quad &  X = \begin{pmatrix} R & M \\ M^\dagger & S \end{pmatrix} \geq 0 \\
+& \forall i\;, R_{ii}=1\\
+& \forall j\;, S_{jj}=1\;.
+\end{align*}
+\item[3.] Verify that the dual program can be expressed as 
+\begin{align}
+ \beta^*(\mG) \,=\, \min\; &  \frac{1}{2}\sum_{i} u_i + \frac{1}{2} \sum_j v_j\label{eq:dual-xor}\\
+s.t. \quad&  \begin{pmatrix} \text{Diag}(u) & -G \\ -G^\dagger & \text{Diag}(v) \end{pmatrix} \geq 0 \notag\\
+& u\in \R^n,\; v\in \R^m\;.\notag
+\end{align}
+\item[4.] Show that for any optimal solution $(u,v)$ to the dual, $\sum_i u_i = \sum_j v_j$. 
+\item[5.] For the special case of $\mG = \mG_\CHSH$, exhibit a dual solution that certifies $\beta^*(\mG_\CHSH)\leq \cos^2\pi/8$, thus providing a third proof of Tsirelson's bound. 
+\end{enumerate}
+Before analyzing the parallel repetition of two XOR games, it is convenient to study their ``XOR repetition''. The XOR of two XOR games $\mG_1$ and $\mG_2$ is the XOR game $\mG = \mG_1\oplus \mG_2$ with $\mX=\mX_1\times \mX_2$, $\mY=\mY_1\times \mY_2$, and if $G^{(1)}$ and $G^{(2)}$ are the game matrices of $\mG_1$ and $\mG_2$ respectively then the game matric of $\mG$ is  
+\[ G_{(x_1,y_1),(x_2,y_2)} \,=\, G^{(1)}_{(x_1,y_1)} G^{(2)}_{x_2,y_2}\;.\]
+In other words, the game matrix for $\mG$ is obtained by taking the tensor product of the game matrices for $\mG_1$ and $\mG_2$. (Make sure that you understand the difference between this definition and the definition of $\mG_1\wedge \mG_2$. In particular, recall that the game predicate $V$ is $\{0,1\}$-valued, whereas the game matrix $G$ is real-valued.)
+\begin{enumerate}
+\item[6.] Verify that $\beta^*(\mG_1\oplus \mG_1) \geq \beta^*(\mG_1)\beta^*(\mG_2)$. 
+\item[7.] We now prove the opposite inequality. 
+\begin{enumerate}
+\item Given dual feasible solutions $(u_1,v_1)$ and $(u_2,v_2)$ to the dual program~\eqref{eq:dual-xor} for $\mG_1$ and $\mG_2$ respectively, show that $(u,v)=(u_1\otimes u_2, v_1\otimes v_2)$ is a feasible dual solution to the dual program for $\mG$. 
+\item Deduce that  $\beta^*(\mG_1\oplus \mG_1) \leq \beta^*(\mG_1)\beta^*(\mG_2)$. 
+\end{enumerate}
+\item[8.] Show that for any XOR games $\mG_1$ and $\mG_2$, it holds that $\omega^*(\mG_1\wedge \mG_2)=\omega^*(\mG_1)\wedge\omega^*(\mG_2)$. 
+\item[9.] Generalize this equality to the case of $n$ XOR games. 
+\end{enumerate}
+\end{exercise}

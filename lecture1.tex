@@ -1,0 +1,425 @@
+
+\chapter{Introduction to nonlocal games}
+
+\section{Nonlocal games}
+
+A \emph{nonlocal game} describes the actions of a \emph{referee} interacting with two, or sometimes more, \emph{cooperating players}. 
+
+\begin{definition}[Nonlocal game]
+A \emph{nonlocal game} $\mG$ is specified by two finite sets of \emph{questions} $\mX$ and $\mY$, two finite sets of \emph{answers} $\mA$ and $\mB$, a distribution $\pi$ on $\mX\times \mY$ and a \emph{game predicate} $V: \mX\times \mY \times \mA\times \mB \to \{0,1\}$. We write succinctly $\mG=(\mX,\mY,\mA,\mB,\pi,V)$ for this data. 
+\end{definition}
+
+The game is ``played'' as follows: The referee selects a pair of questions $(x,y)\in\mX\times \mY$ according to $\pi$. They send $x$ to the first player, usually referred to as ``Alice,'' and $y$ to the second player, ``Bob.'' Alice responds with some $a\in \mA$ and Bob with some $b\in \mB$. The main restriction on how $a,b$ are determined is that Alice and Bob may cooperate but should not communicate---we make this precise below. The players win the game if and only if $V(x,y,a,b)=1$. 
+
+We generally consider that the game is repeated an arbitrarily large number of times and are interested in the largest fraction of games that Alice and Bob can win in the limit. Since the referee's actions are memoryless (each game instance is played independently), without loss of generality the optimal strategy is also memoryless and we only consider such strategies.
+
+Let us make formal how a strategy for the players is represented. While in general a ``strategy'' may involve much thinking and strategizing, for purposes of determining the player's success probability in the game all the relevant information is captured by a single list of numbers, namely for every pair of questions $(x,y)$ and every pair of answers $(a,b)$, what is the probability that the players answer $(a,b)$ to $(x,y)$. This is so important that we make it into a definition.
+
+\begin{definition}[Strategy]\label{def:strategy}
+Given a nonlocal game $\mG=(\mX,\mY,\mA,\mB,\pi,V)$ a \emph{strategy} for the players in $\mG$ is a $p=(p(a,b|x,y))_{abxy} \in [0,1]^{\mA\times \mB\times \mX\times \mY}$ such that for all $(x,y)\in\mX\times \mY$, $\sum_{(a,b)\in\mA\times \mB} p(a,b|x,y) = 1$. 
+\end{definition}
+
+If \emph{any} strategy of the form specified in the definition was allowed for the players, the study of nonlocal games would be rather boring. 
+
+\begin{exercise}\label{ex:nontrivial}
+Given a game $\mG$, say that a pair of questions $(x,y)\in\mX\times \mY$ for $\mG$ is \emph{nontrivial} if $\pi(x,y)>0$ and there is some $(a,b)\in \mA\times \mB$ such that $V(x,y,a,b)=1$.
+For any game $\mG$, give a simple expression for the maximum winning probability of players allowed to play using any strategy satisfying the requirements of Definition~\ref{def:strategy}.
+\end{exercise}
+
+Given a nonlocal game $\mG$ and a strategy $S$ for $\mG$, the \emph{success probability} of $S$ in $\mG$ is defined as 
+\[ \omega(G;S) \,=\, \sum_{x,y} \pi(x,y) \sum_{a,b} V(x,y,a,b) p(a,b|x,y)\;.\]
+Informally this quantity is the average, over the referee's choice of questions and the player's probabilistic strategy, that the players provide valid answers to the referee. 
+If one fixes a collection of possible strategies $S$ then one can define an associated \emph{value} $\omega(G;S)$ for the game, which is the supremum success probability achievable using strategies $S\in\mS$:
+\[ \omega(G;\mS) \,=\, \sup_{S\in\mS} \,\omega(G;S)\;.\]
+
+
+
+
+
+What makes the study of nonlocal games interesting is the different types of restrictions that can be placed on the player's strategies. So far we only said that ``the players should not communicate.'' Intuitively, this requirement is there so that the game is indeed a two-player, not one-player game: if Alice and Bob were allowed to sit in the same room, exchange their questions, and jointly determine answers, then this wouldn't truly be a two-player game. 
+
+So how do we model the intuitive requirement that  the players are isolated from each other and unable to communicate?
+We will see that there are multiple natural ways of doing this, leading to a rich theory of values (i.e.\ maximum success probabilities) for nonlocal games. We start by giving arguably the three most natural possibilities.
+
+\subsection{Classical and non-signaling strategies}
+
+The most natural class of strategies are classical strategies. Informally, a strategy is ``classical'' if it can be written as a convex combination of product strategies. 
+
+\begin{definition}[Classical strategy]
+A strategy $p$ for a nonlocal game $\mG$ is called \emph{classical} if there exists a probability space $(\Omega,\mu)$ and for all $a,x$ and $b,y$ measurable functions $p_A(a|x,\cdot),p_B(b|y,\cdot):\Omega\to [0,1]$ such that for all $x,y,\omega$, 
+\[\sum_a p_A(a|x,\omega)\,=\,\sum_b p_B(b|y,\omega)=1\;,\]
+ and 
+\[p(a,b|x,y)\,=\,\int_\omega p_A(a|x,\omega)p_B(b|y,\omega)d\mu(\omega)\;.\] 
+The classical value of a game is denoted by $\omega(G) = \omega(\mG;\mS_{class})$. 
+\end{definition}
+
+Classical strategies are the most restrictive class of strategies we will consider. At the opposite end of the spectrum we have the most permissive class of strategies, non-signaling strategies, which informally correspond to those strategies which satisfy no other restriction but that of respecting causality. 
+
+\begin{definition}[Non-signaling strategy]
+A strategy $p$ for a nonlocal game $\mG$ is called \emph{non-signaling} if for every $a,b,x,x',y,y'$ it holds that 
+\[ \sum_{a} p(a,b|x,y) = \sum_{a} p(a,b|x',y) \quad\text{and}\quad \sum_{b} p(a,b|x,y) = \sum_{b} p(a,b|x,y')\;.\]
+\end{definition}
+
+\begin{exercise}
+For $\mX=\mY=\mA=\mB=\{0,1\}$, give an example of a strategy that is non-signaling but is not classical. 
+\end{exercise}
+
+If you gave some thought to the previous exercise, you might have realized that it is not so easy! Coming up with a non-signaling strategy is not hard, but how do we argue that it is \emph{not} classical? An observation that may help you is that the sets of classical strategies, and the set of non-signaling strategies, are both convex sets. So to show that a point $p$ in the non-signaling set is not classical it suffices to find a linear function $\lambda:[0,1]^{\mX\times\mY\times \mA\times \mB} \to \R$ such that $\lambda\cdot p > \sup_{q\in \mC_{class}} \lambda\cdot q$, where $\mC_{class}$ denotes the collection of all classical strategies. 
+Any such linear function can be represented by its coefficients $\lambda = (\lambda_{xyab})$, which we may without loss of generality assume normalized such that $\|\lambda\|_1=1$. Now let $\pi(x,y)=\sum_{a,b}|\lambda_{xyab}|$ and $V(a,b|x,y)=\text{sign}(\lambda_{xyab})$. Then $\mG_\lambda=(\mX,\mY,\mA,\mB,\pi,V)$ is a nonlocal game and moreover for any strategy $p$, its success probability in $\mG_\lambda$ is exactly
+\[\sum_{abxy} \pi(x,y)V(a,b|x,y)p(a,b|x,y) \,=\, \lambda \cdot p\;.\]
+This discussion leads us to an important insight: games are in a precise sense dual to strategies, and in particular games provide a means to separate different sets of strategies. To show that there exists a non-signaling but not classical strategy it suffices to design a game $\mG$ such that there is a non-signaling strategy in $\mG$ that has a higher success probability than any classical strategy.\footnote{Observe that both the set of classical and the set of non-signaling strategies are closed.}  
+
+\begin{example}[CHSH game]\label{ex:chsh}
+In the CHSH game $\mG_\CHSH$ questions and answers are a single bit each: $\mX=\mY=\mA=\mB=\{0,1\}$. The distribution $\pi$ is uniform on $\mX\times \mY$, and the game predicate is $V(x,y,a,b)=1$ if $a\oplus b = x\wedge y$ and $V(x,y,a,b)=0$ otherwise. 
+\end{example}
+
+\begin{exercise}\label{ex:chsh-bias}
+\begin{enumerate}
+\item Show that there is a classical strategy which succeeds in the game $\mG_\CHSH$ with probability $3/4$.
+\item Show that there is a non-signaling strategy which succeeds in $\mG_\CHSH$ with probability $1$.  
+\item Show that $3/4$ is best achievable for classical strategies. \emph{[Hint: first consider classical deterministic strategies. Such a strategy is represented by $4$ bits only.]}
+\end{enumerate}
+\end{exercise}
+
+So far we have introduced classical strategies, non-signaling strategies, and showed that (as soon as the number of questions and answers per player is at least $2$) the latter can lead to strictly higher success probabilities. Next we turn to quantum strategies. 
+
+\subsection{Quantum strategies}
+
+Informally, a quantum strategy in a nonlocal game is ``any strategy that can be implemented locally using the laws of quantum mechanics.'' Unfortunately (or fortunately?) there is not a single possible mathematical interpretation of this sentence, even within quantum mechanics. We will return to this difficulty later on. For now, let us stick to the standard interpretation in quantum computing, which is to represent locality using a tensor product of Hilbert spaces. More precisely, in quantum mechanics we associate a Hilbert space with each player, $\mH_A$ for Alice and $\mH_B$ for Bob, such that the joint Hilbert space is $\mH = \mH_A \otimes \mH_B$. The joint state of Alice and Bob is a unit vector (also called \emph{state}) $\ket{\psi} \in \mH_A \otimes \mH_B$. When Alice (resp.\ Bob) receives a question $x$ (resp.\ $y$) she (he) may perform an arbitrary measurement, or POVM (for positive operator-valued measure), on her (his) system to determine her (his) answer. 
+
+\begin{definition}
+Given a separable Hilbert space $\mH$, a POVM on $\mH$ is a collection $\{A_i\}_{i\in I}$ where $I$ is an arbitrary index set such that for all $i\in I$, $A_i$ is positive semidefinite on $\mH$ and $\sum_i A_i=\Id$. A POVM is called \emph{projective} if all POVM elements $A_i$ are projections. 
+\end{definition}
+
+For each $x\in \mX$ let $\{E_{x,a}\}_{a\in\mA}$ be a POVM on $\mH_A$ associated with Alice's question $x$, and similarly for each $y\in \mY$ let $\{E_{y,b}\}_{b\in\mB}$ be a POVM on $\mH_B$. The Born measurement rule is that together, the state $\ket{\psi}$ and the POVM lead to the strategy 
+\begin{equation}\label{eq:p-quant}
+p(a,b|x,y) \,=\, \bra{\psi} E_{x,a} \otimes E_{y,b} \ket{\psi}\;.
+\end{equation}
+It is a good sanity-check to verify that this indeed defines a valid strategy according to Definition~\ref{def:strategy}. For future reference we record it in a definition. 
+
+\begin{definition}[Quantum (tensor) strategy]
+A strategy $p$ is a \emph{quantum (tensor) strategy} if there exists (separable) Hilbert spaces $\mH_A$ and $\mH_B$, a unit vector $\ket{\psi}\in \mH_A\otimes \mH_B$, and for every $x,y$ POVM $\{E_{x,a}\}_a$ on $\mH_A$ and $\{E_{y,b}\}_b$ on $\mH_B$ such that~\eqref{eq:p-quant} holds. 
+
+The quantum value of a game is denoted by $\omega^*(G) = \omega(\mG;\mS_{quant})$. 
+\end{definition}
+
+At first it may not be so easy to see how quantum strategies compare to classical and non-signaling strategies. The following exercise suggests a few simple observations. 
+
+\begin{exercise}
+\begin{enumerate}
+\item Verify that any quantum strategy is non-signaling.
+\item Show that any classical strategy is a quantum strategy. \emph{[Hint: first, show this for deterministic strategies. Don't forget to show it for randomized strategies!]}
+\item A quantum state $\ket{\psi}\in \mH_A\otimes \mH_B$ is said \emph{entangled} if it cannot be written as $\ket{\psi}=\ket{\psi_A}\otimes \ket{\psi_B}$ for some $\ket{\psi_A}\in\mH_A$, $\ket{\psi_B}\in \mH_B$. Show that any quantum strategy using a state $\ket{\psi}$ that is \emph{not} entangled is classical. Give an example of a quantum strategy using an entangled state $\ket{\psi}$ that is classical.\footnote{It is worth noting fact that quantum algorithms may be more powerful than classical algorithms is irrelevant here, because each prover on their own is always allowed arbitrary large computational power.}
+\end{enumerate}
+\end{exercise}
+
+The exercise shows that quanutm strategies lie ``between'' classical and non-signaling strategies. Do they coincide with either? We will soon show that the answer is no, and in fact the CHSH game from Example~\ref{ex:chsh} can be used to separate all three sets. Before we do this we investigate a class of games called XOR games which contains the CHSH game. These games have the advantage that quantum strategies for them can always be written in a particularly simple form. Studying this will allow us to develop insights in the strength and limitations of quantum strategies. 
+
+
+
+\section{XOR games}
+
+XOR games are the simplest class of games that has been extensively studied. Informally, a game $\mG$ is an XOR game if $\mA=\mB=\{-1,1\}$ and the game predicate $V(x,y,a,b)$ depends only on $x,y$ and the parity $a b$. Setting some notation, in an XOR game
+\begin{enumerate}
+  \item The referee selects a pair of questions $(i,j)\in \{1,\ldots, m\}\times \{1,\ldots, n\}$
+   according to a distribution $\pi$. 
+  \item The referee sends $i$ to Alice and $j$ to Bob. Alice and Bob reply with signs $a_i,b_j\in\{\pm 1\}$ respectively.
+  \item The payoff to the players is $a_ib_jc_{ij}$, where $c_{ij}\in\{\pm 1\}$. (Note that the payoff is a number in $\{\pm 1\}$. The interpretation is that if the payoff is $+1$ the players ``win'' and if it is $-1$ they ``loose''.\footnote{More general values $c_{ij}\in\R$ are allowed, without any major effect on the general theory. For simplicity we stick with $\pm1$ values.})
+\end{enumerate}
+Given an arbitrary XOR game $\cal G$, we can represent it succinctly using the matrix $G\in\R^{m\times n}$ with coefficients $G_{ij}=\pi(i,j)c_{ij}$. This matrix satisfies $\|G\|_1=1$. Conversely, from any $G\in \R^{m\times n}$ with $\|G\|_1=1$ we can construct an XOR game $\cal G$ by setting $\pi(i,j)=|G_{ij}|$ and $c_{ij}=\text{sign}(G_{ij})$. 
+
+Observe that the CHSH game from Example~\ref{ex:chsh} is an XOR game with $m=n=2$, $\pi$ uniform, and $c_{00}=c_{01}=c_{10}=+1$ and $c_{11}=-1$. The associated matrix is $G_{\CHSH}=\frac{1}{4}\begin{pmatrix} 1 & 1 \\ 1 & -1\end{pmatrix}$. 
+
+\subsection{Bias of an XOR game}
+
+Suppose that a strategy $p$ for XOR game $\mG$ succeeds with probability $\omega = \frac{1}{2}+\frac{1}{2}\beta$, where $\beta\in[-1,1]$. By flipping all of Bob's answers in the strategy, we obtain a new strategy $p'$ that succeeds with probability $\omega'=\frac{1}{2}-\beta$. This means that the maximum success probability in $\mG$, where the maximum is taken over any set of strategies that is closed under flipping all of Bob's answers, is always of the form $\frac{1}{2}+\frac{1}{2}\beta$ for some $0\leq \beta\leq 1$. We call $\beta$ the \emph{bias} of the game. 
+
+\begin{definition}
+Given an XOR game $\mG$, define its \emph{classical bias} $\beta(\mG)$ as twice the maximum success probability of classical strategies in the game, minus $1$. Similarly, define the \emph{quantum bias} $\beta^*(G)$ and \emph{non-signaling bias} $\beta^{ns}(G)$ from quantum (tensor) and non-signaling strategies respectively.
+\end{definition}
+
+The classical, quantum and non-signaling biases admit nice expressions which we now give. 
+
+\begin{lemma}
+For any XOR game $\mG$, 
+ \begin{equation}\label{eq:bias-class}
+ \beta(\mG) \,=\, \max_{a_i,b_j\in\{\pm 1\}}\,\sum_{i,j}\, G_{ij}a_ib_j \;.
+ \end{equation}
+\end{lemma}
+
+\begin{proof}
+By definition of the set of classical strategies, extreme points are deterministic strategies. A classical deterministic strategy is specified by a collection of signs $a_i,b_j\in\{\pm 1\}$ representing Alice and Bob's answers to questions $i,j$ respectively. The probability that $(i,j)$ is selected as questions and Alice and Bob answer correctly is exactly $\frac{1}{2}|G_{ij}|(1+G_{ij}a_ib_j)$. Summing over all $(i,j)$ and using $\|G\|_1=1$ gives the result. 
+\end{proof}
+
+\begin{example}\label{ex:chsh-beta}
+The bias the CHSH game can be evaluated exactly: 
+ $$ \beta(\mG_\CHSH)=\max_{a_i,b_j\in\{\pm 1\}}\sum_{i,j}\pi(i,j)c_{ij}a_ib_j=\max\frac{1}{4}(a_1b_1+a_1b_2+a_2b_1-a_2b_2)= \frac{1}{2}\;.  $$
+	So the maximum success probability of classical strategies in the game  
+	$$\omega(G) \,=\, \frac{1}{2} + \frac{1}{2}\, \beta(G) \,=\, \frac{3}{4}\;.$$
+\end{example}
+
+Now we turn to the non-signaling bias. 
+
+\begin{exercise}
+Say that a game is \emph{nontrivial} if all pairs of questions with $\pi(x,y)>0$ are nontrivial (see Exercise~\ref{ex:nontrivial}). For a nontrivial XOR game $\mG$, show that the non-signaling bias satisfies $\beta^{ns}(mG)=1$.
+\end{exercise}
+
+\subsection{The quantum bias}
+
+Now let's consider quantum tensor strategies. Using that answers in an XOR game are always binary we can represent each player's strategy as a family of \emph{observables}.
+
+\begin{definition}
+A binary observable is a Hermitian matrix $X\in \C^{d\times d}$ such that $X=X^\dagger$ and $X^2=\mathbb{I}$ (in other words, all eigenvalues of $X$ are in $\{\pm 1\}$). A binary observable $X$ can always be decomposed as $X = X^0 - X^1$ for two projections $X^0$, $X^1$ such that $X^0+X^1 = \Id$, i.e.\ $\{X^0,X^1\}$ is a projective measurement. 
+\end{definition}
+
+Let $(\ket{\psi},\{E_{i,a}\},\{E_{j,b}\})$ be a quantum strategy for an XOR game $G$. Fixing a pair of questions $(i,j)$, the product of the outcomes $(a,b)$ returned by this strategy to $(i,j)$ has expectation
+\begin{align*}
+\Es{}[a\cdot b] &= \Pr\big( (a,b)=(0,0) \big) + \Pr\big( (a,b)=(1,1) \big) - \Pr\big( (a,b)=(0,1) \big)  - \Pr\big( (a,b)=(1,0) \big) \\
+&=  \bra{\psi} E_{x,0} \otimes E_{y,0} \ket{\psi} + \bra{\psi} E_{x,1} \otimes E_{y,1} \ket{\psi} - \bra{\psi} E_{x,0} \otimes E_{y,1} \ket{\psi} - \bra{\psi} E_{x,1} \otimes E_{y,0}\ket{\psi}\\
+&=  \bra{\psi}E_x \otimes E_y \ket{\psi} \,\in\,[-1,1]\;,
+\end{align*}
+where $E_x = E_{x,0}-E_{x,1}$ and $E_y=E_{y,0}-E_{y,1}$. Note that $E_x,E_y$ are Hermitian and satisfy $\|E_x\|,|E_y\|\leq 1$. Moreover any Hermitian $X$ can be written as $X=X_0-X_1$ where $X_0+X_1=\Id$ by letting $X_0 = \frac{1}{2}(\Id+X)$ and $X_1=\frac{1}{2}(\Id-X)$. Therefore, 
+\begin{equation}\label{eq:qbias-1}
+\beta^*(G) \,=\, \sup_{\ket{\psi},\{E_x\},\{E_y\}} \sum_{i,j} \,G_{ij}\, \bra{\psi} E_x \otimes E_y \ket{\psi}\;,
+\end{equation}
+where the supremum is taken over all states $\ket{\psi}\in \mH_A\otimes \mH_B$ and Hermitian $E_x,E_y$ such that $\|E_x\|,\|E_y\|\leq 1$. Observe that~\eqref{eq:qbias-1} is linear in any given eigenvalue of any given $E_x$ or $E_y$, all other parameters (including the eigenbasis) being fixed. This means that the supremum is achieved at $E_x,E_y$ that are observables. We just proved the following lemma.
+
+\begin{lemma}
+For any XOR game $\mG$, 
+ \begin{equation}\label{eq:bias-quant}
+ \beta^*(\mG) \,=\, \sup_{\ket{\psi},\{E_x\},\{E_y\}} \sum_{i,j}\, G_{ij}\, \bra{\psi} E_x \otimes E_y \ket{\psi}\;,
+ \end{equation}
+where the supremum is taken over all spaces $\mH_A,\mH_B$, states $\ket{\psi}\in \mH_A\otimes \mH_B$ and families of observables $\{E_x\}$, $\{E_y\}$.
+\end{lemma}
+
+A priori the supremum in~\eqref{eq:bias-quant} is needed, because there is no limit to the dimension of the spaces $\mH_A$, $\mH_B$; in general these may even be infinite-dimensional. 
+You can verify that if we restrict the dimension of both spaces to $1$, then the only states are $\ket{\psi} = (e^{i\theta})$ for some real angle $\theta$, the only observables are $X,Y\in\{\pm 1\}$, and the quantum bias reduces to the classical bias.
+
+
+If we restrict the state to the \emph{maximally entangled state} in dimension $d\geq 1$
+\[\ket{\phi_{d}} \,=\, \frac{1}{\sqrt{d}} \ket{i}\ket{i}\;,\]
+then we obtain a particularly simple formula, since in this case
+ $$\bra{\psi} X\otimes Y \ket{\psi} \,=\, \frac{1}{d} \Tr(XY^T)\;.$$
+We will slightly abuse notation and write  $\langle X, Y\rangle = \Tr(XY^\dagger)$ to denote the matrix trace inner product. 
+
+\begin{example}\label{ex:chsh-qbias}
+Consider 
+\begin{equation*}
+E_0=\left(\begin{array}{cc}1&0\\0&-1\end{array}\right),\qquad
+F_0=\frac{1}{\sqrt{2}}\left(\begin{array}{cc}1&1\\1&-1\end{array}\right),\qquad
+E_1=\left(\begin{array}{cc}0&1\\1&0\end{array}\right),\qquad
+F_1=\frac{1}{\sqrt{2}}\left(\begin{array}{cc}1&-1\\-1&-1\end{array}\right)\;.
+\end{equation*}
+Then you can verify that $E_0,E_1,F_0,F_1$ are observables. Moreover, 
+$$\frac{1}{2} \langle E_0, F_0\rangle = \frac{1}{2}\langle E_0, F_1\rangle = \frac{1}{2} \langle E_1, F_0\rangle =\frac{\sqrt{2}}{2}\;,\quad\text{and}\quad \frac{1}{2}\langle  E_1,F_1\rangle = -\frac{\sqrt{2}}{2}\;.$$
+ Plugging these calculations into the definition of the CHSH game (Example~\ref{ex:chsh}), we see that these observables, together with a maximally entangled state in dimension $d=2$, achieve a bias of
+$$
+\frac{1}{4}\cdot 4\cdot \frac{\sqrt{2}}{2} =\frac{\sqrt{2}}{2} \approx 0.73\;,
+$$
+which is strictly larger than the bias $1/2$ that you proved optimal for classical players in Exercise~\ref{ex:chsh-bias}. In particular, quantum strategies are strictly more powerful than classical strategies.
+\end{example}
+
+The example of the CHSH game shows that quantum players can sometimes strictly outperform their classical peers. This already has a pretty neat (and, arguably, deep) consequence: it is possible to use the CHSH game as a ``statistical test for information-theoretic randomness''! Indeed, any strategy that succeeds in the test  with probability larger than $\frac{1}{2} + \frac{1}{2}\cdot\frac{1}{2}=\frac{3}{4}$ (a simple condition to verify) cannot be a classical strategy, and in particular it cannot be a deterministic strategy. Thus, any pair of isolated devices (representing the players) that generate an input-output behavior that leads to a sufficiently high success probability in the game is necessarily randomness-generating. Note that this kind of randomness is very different from ``pseudo-randomness'': there is no question of computational power here, and the guarantees provided by the test are information-theoretic!
+
+\section{An SDP formulation of the quantum bias and Tsirelson's bound}
+\label{sec:sdp-tsirelson}
+
+Is there any limit to how well quantum players can do in the CHSH game, or more generally in an XOR game? Recall that the optimal expected payoff for quantum players is given by~\eqref{eq:bias-quant}:
+\begin{equation}\label{eq:qval-2}
+\beta^*(\mG)=\sup_{\substack{E_i,F_j\in\C^{d\times d}\\ E_i^2=F_j^2=\mathbb{I}\\ E_i=E_i^\dagger\\ F_j=F_j^\dagger}}\sum_{i,j} G_{ij}\cdot\bra{\psi} E_i\otimes F_j\ket{\psi} \le \sup_{\substack{\vec{u}_i,\vec{v}_j\in \C^{d^2}\\ \|\vec{u}_i\|=\|\vec{v}_j\|=1}}\sum_{i,j} G_{ij}\vec{u}_i\cdot \vec{v}_j = \text{SDP}(\mG)\;.
+\end{equation}
+Here the inequality holds because we can set $\vec{u}_i=E_i \otimes \Id \ket{\psi}$ and $\vec{v}_j=\Id\otimes F_j \ket{\psi}$. Under such choice, one can verify that
+$$
+\|\vec{u}_i\|=\|\vec{v}_i\|=1,\qquad 
+u_i\cdot v_j=\bra{\psi} E_i \otimes F_j \ket{\psi}\;.
+$$
+The expression on the right-hand side of~\eqref{eq:qval-2} is nice because it is directly analogous to the expression~\eqref{eq:bias-class} for the classical bias: the only difference is that we now optimize over inner products of unit vectors in any dimension, instead of just products of $\pm 1$ values. Although we will not show explicitly why, those of you familiar with semidefinite programs will easily recognize that $\text{SDP}(\mG)$ is, indeed, an SDP. In particular, the quantity can be approximated to within $\pm\eps$ in time polynomial in $n$, $m$, and $\log(1/\eps)$. 
+
+
+Note that~\eqref{eq:qval-2} is only an upper bound. How good is it? Let's first use it to prove \emph{Tsirelson's theorem}, which states that the lower bound of $\frac{\sqrt{2}}{2}$ on the quantum bias of the CHSH game obtained in Exercise~\ref{ex:chsh-qbias} is tight. 
+
+\begin{theorem}[Tsirelson]\label{thm:tsirelson}
+For $\mG_{CHSH}$ the CHSH game, it holds that $\beta^*(\mG_{CHSH}) \leq \frac{\sqrt{2}}{2}$.
+\end{theorem}
+
+\begin{proof}
+For the CHSH game we can write
+\begin{align*}
+\text{SDP}(\mG_{CHSH}) &= \sup_{\substack{\vec{u}_i,\vec{v}_j\in \R^{d^2}\\ \|\vec{u}_i\|=\|\vec{v}_j\|=1}} \frac{1}{4} \big(\vec{u}_0 \cdot \vec{v}_0 + \vec{u}_1 \cdot \vec{v}_0 + \vec{u}_0 \cdot \vec{v}_1 - \vec{u}_1 \cdot \vec{v}_1\big)\\
+ &= \sup_{\substack{\vec{u}_i,\vec{v}_j\in \R^{d^2}\\ \|\vec{u}_i\|=\|\vec{v}_j\|=1}} \frac{1}{4} \big(\vec{u}_0 \cdot (\vec{v}_0 + \vec{v}_1) +  \vec{u}_1 \cdot (\vec{v}_0 -\vec{v}_1)\big)\\
+ & = \sup_{\substack{\vec{v}_j\in \R^{d^2}\\ \|\vec{v}_j\|=1}} \frac{1}{4} \big(\|\vec{v}_0 + \vec{v}_1\| + \|\vec{v}_0 -\vec{v}_1\| \big)\\
+ & \leq \sup_{\substack{\vec{v}_j\in \R^{d^2}\\ \|\vec{v}_j\|=1}} \frac{\sqrt{2}}{4} \big( \|\vec{v}_0 + \vec{v}_1\|^2 + \|\vec{v}_0 -\vec{v}_1\|^2\big)^{1/2} \\
+&= 2\frac{\sqrt{2}}{4} \;.
+\end{align*}
+Here for the third line we used that for any nonzero $\vec{v}$ the supremum over unit $\vec{u}$ of $\vec{u}\cdot \vec{v}$ is $\|\vec{v}\|$, achieved at $\vec{u} = \vec{v}/\|\vec{v}\|$; the fourth line is the Cauchy-Schwarz inequality; the last expands the squares and uses that $\vec{v}_0$ and $\vec{v}_1$ are unit vectors. 
+\end{proof}
+
+Tsirelson's proof of his theorem was a bit different: he worked directly with the operators that define a quantum tensor strategy, and considered the square of the game value. We will revisit his proof a little later. 
+Theorem~\ref{thm:tsirelson} shows that the bound~\eqref{eq:qval-2} is tight for the CHSH game. What is amazing is that it is \emph{always} tight, for any XOR game! This is can be shown by using a beautiful trick of Tsirelson's. 
+
+\begin{exercise}\label{ex:tsirelson}
+Show that given a vector solution to SDP($\mG$) it is always possible to find a quantum strategy that achieves exactly the same value. \emph{[Hint: Consider Hermitian matrices $C_1,\ldots,C_d \in \C^{D\times D}$ that square to identity and pairwise anti-commute. For any vector $u$, consider $u\mapsto C(u) = \sum_i u_i C_i$. What can you say about $C(u)$? And about $\bra{\phi_{D}} C(u) \otimes C(v)\ket{\phi_D}$? ]}
+\end{exercise}
+
+The fact that~\eqref{eq:qval-2} is an equality has amazing consequences for the study of XOR games. In particular, it has the following implications. 
+\begin{itemize}
+  \item The right-hand size of~\eqref{eq:qval-2} can be expressed as a semidefinite program, hence the maximum expected payoff of quantum players can be computed efficiently. As we will see later this fact markedly distinguishes XOR games from more general nonlocal games. 
+  \item The proof of Tsirelson's theorem in Exercise~\ref{ex:tsirelson} is explicit, hence an optimal quantum strategy can always be found efficiently. Moreover, there is always an optimal strategy in dimension $2^{\lfloor \min(n,m)/2 \rfloor}$. 
+  \item The following exercise shows that, in XOR games, quantum players can only ever achieve a payoff that is a constant factor larger than the optimal classical payoff.
+\end{itemize}
+
+\begin{exercise}\tnote{todo}
+Grothendieck's inequality from functional analysis shows that the ratio $\text{SDP}(G)/\beta^*(G)$ is always at most a universal constant, Grothendieck's constant $K_G \leq 1.782\ldots$.
+\end{exercise}
+
+
+\begin{remark}
+There are many interesting games that are not XOR games. A good example which we study below is the \emph{Magic Square game}. This game is a ``pseudo-telepathy'' game, which means that the quantum value is $1$ (there is a perfect quantum strategy), while the classical value is strictly below $1$. It is a good exercise to show that XOR games cannot be pseudo-telepathy games.  
+\end{remark}
+
+\section{Binary Linear System Games}
+
+We introduce a second family of nonlocal games that has been extensively studied. 
+
+A Binary Linear System (BLS) is specified by a collection of \emph{variables} $v_1,\ldots,v_n$ ranging in $\{\pm 1\}$ and a collection of $m$ \emph{equations} $(E_1,c_1),\ldots,(E_m,c_m)$ such that for each $j\in\{1,\ldots,m\}$, $E_j \subseteq \{1,\ldots,n\}$ and $c_j\in\{\pm 1\}$. Informally, this is interpreted as the constraint $\prod_{\ell\in E_j} v_\ell = c_j$. In particular, we say that the BLS is \emph{classically satisfiable} if there exists a $\pm1$ assignment to the $v_j$ such that all constraints are satisfied. 
+
+Given a BLS $\{(E_j,c_j)\}$, we associate to it a game which is played as follows. Questions to Alice are indexed by equations, $j\in \{1,\ldots,m\}$, and questions to Bob are indexed by variables, $i\in \{1,\ldots,n\}$. 
+Upon receiving question $j$, Alice is expected to return an assignment to all variables appearing in $E_j$; so, $\mA=\{-1,1\}^k$ where $k$ is the maximum number of variables appearing in any given constraint (which we  assume to be a constant for simplicity). Upon receiving question $i$, Bob  is expected to return an assignment to variable $v_i$, so $\mB=\{-1,1\}$.  The game predicate $V(i,j,a,b)=1$ if and only if the assignment $a$ satisfies $E_j$, i.e.\ $\prod_\ell a_\ell = c_j$ (``equation check''), and moreover it is consistent with $b$, i.e.\ the value that $a$ assigns to variable $i$ matches $b$ (``consistency check''). 
+
+
+Let's see an example. 
+
+\begin{example}[Magic Square Game]
+The magic square game is based on a BLS with $n=9$ and $m=6$. It is most easily visualized by arranging the $9$ variables in a square, 
+\[\begin{matrix} v_1 & v_2 & v_3 \\ v_4 & v_5 & v_6 \\ v_7 & v_8 & v_9 \end{matrix}\;.\]
+The $6$ constraints are that the product of all variables in a row or column should equal $+1$, \emph{except} for the last column where the product should equal $-1$.
+\end{example}
+
+\begin{exercise}\label{ex:ms-cval}
+Determine the classical value of the Magic Square game. \emph{[Hint: there are $6\times 3$ questions in total. What is the best classical solution  to the BLS that you can write down?]}
+\end{exercise}
+
+BLS games are interesting because there is a close connection between \emph{perfect} quantum strategies for them and \emph{operator solutions} to the underlying system of equations, which extends the obvious connection between classical strategies and classical solutions. This connection in some cases allows us to determine if there is a perfect quantum strategy in the game, and in other cases allows us to show that deciding whether this is the case can be very hard. 
+
+\begin{definition}
+Given a BLS $(E,c)$, an \emph{operator solution} to it is a collection $A_1,\ldots,A_n$ of binary observables such that for every $j\in\{1,\ldots,m\}$, the collection $\{A_\ell\}_{\ell\in E_j}$ pairwise commute and $\prod_{\ell\in E_j} A_{\ell} = c_j \Id$. 
+\end{definition}
+
+Note that the definition only requires that any two $A_\ell$, $A_{\ell'}$ such that both $\ell,\ell'$ appear in the same constraint $C_j$ must commute. This does not imply that all the $A_\ell$ mutually commute because commutation is not a transitive relation. 
+
+\begin{exercise}
+Verify that the following is an operator solution to the Magic Square game. Here $\sigma_X$, $\sigma_Z$ and $\sigma_Y = i\sigma_X\sigma_Z$ are the Pauli matrices. 
+\begin{equation}\label{eq:opsol-ms}
+ \begin{matrix} I\otimes \sigma_Z & \sigma_Z \otimes I & \sigma_Z \otimes \sigma_Z \\
+\sigma_X \otimes I & I \otimes \sigma_X & \sigma_X\otimes \sigma_X\\
+\sigma_X \otimes \sigma_Z & \sigma_Z \otimes \sigma_X & \sigma_Y \otimes \sigma_Y 
+\end{matrix}
+\end{equation}
+\end{exercise}
+
+It is not too hard to show that for any BLS, an operator solution immediately translates into a perfect quantum strategy for it. Thus the preceding exercise shows that the Magic Square has a perfect quantum strategy; combined with Exercise~\ref{ex:ms-cval} it follows that the Magic Square is a pseudo-telepathy game.  
+
+\begin{lemma}\label{lem:bcs-perfect}
+Suppose given an operator solution $Y_1,\ldots,Y_n$ to a BLS $(E,c)$ such that each $Y_j$ is a binary observable on a finite-dimensional Hilbert space $\mH$. Then the following strategy succeeds with probability $1$ in the BLS game:
+\begin{itemize}
+\item The players share the \emph{maximally entangled} state 
+\begin{equation}\label{eq:psi-bls}
+ \ket{\phi_d}_{\reg{AB}} = \frac{1}{\sqrt{d}} \sum_{i} \ket{i}_{\reg{A}} \otimes \ket{i}_{\reg{B}} \in \mH_\reg{A} \otimes \mH_\reg{B}\;,
+\end{equation}
+ where $d$ is the dimension of $\mH$, each of $\mH_\reg{A}$ and $\mH_\reg{B}$ is a copy of $\mH$, and $\{\ket{i}\}$ an orthonormal basis for it.\footnote{The maximally entangled state is a natural generalization of the EPR pair which can be defined on any tensor product of (finite-dimensional) isomorphic Hilbert spaces.}
+\item On question $j$, Alice sequentially measures the observables $Y_{j_1}^T,Y_{j_2},\ldots,Y_{j_k}$ on her share of $\ket{\psi}$, where $j_1,\ldots,j_k$ are the elements of $E_j$. She obtains outcomes $a_1,\ldots,a_k$ that she returns as her answer. 
+\item On question $i\in \{1\ldots,n\}$ Bob measures the observable $Y_{i}$ on his share of $\ket{\psi}$. He obtains an outcome $b\in\{\pm 1\}$ that he returns as his answer. 
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+First we note that the strategy described in the lemma is valid: since by definition of an operator solution the observables $Y_{j_1},Y_{j_2},\ldots,Y_{j_\ell}$ always commute it is possible for Alice to measure them simultaneously. 
+
+The following relation holds the key to the proof: for any operators $A$ on $\mH_\reg{A}$ and $B$ on $\mH_\reg{B}$ it holds that 
+\begin{equation}\label{eq:me-ab}
+\bra{\phi_d} A\otimes B \ket{\phi_d} \,=\, \frac{1}{d}\Tr(AB^T)\;,
+\end{equation}
+where $\ket{\phi_d}$ is as in~\eqref{eq:psi-bls}. We leave the verification of~\eqref{eq:me-ab} as an exercise. Using this relation it is a matter of direct calculation to verify that the players' answers always satisfy the verifier's checks in the game. In more detail, 
+\begin{itemize}
+\item For the consistency check, we note that the probability that the two players return consistent answers on question $(j,k)$ is 
+\[ \frac{1}{2}+\frac{1}{2}\bra{\psi} Y_{j_k} \otimes Y_{j_k}^T \ket{\psi} \,=\, \frac{1}{2}+\frac{1}{2}\frac{1}{d} \Tr\big(Y_{j_k}^2\big) \,=\, 1\;,\]
+where the first equality follows from~\eqref{eq:me-ab} and the second holds since $Y_{j_k}$ is a binary observable so $Y_{j_k}^2 = \Id$. 
+\item For the equation check, we note that the probability that Alice's answers satisfy the check for the $j$-th equation is 
+\[ \frac{1}{2}+\frac{c_j}{2}\bra{\psi}  Y_{j_1}\cdots Y_{j_k}\otimes \Id \ket{\psi} \,=\,\frac{1}{2}+\frac{c_j}{2} \bra{\psi} c_j\Id\otimes \Id  \ket{\psi}\,=\,1\;,\]
+where the first equality holds since $Y_{j_1}\cdots Y_{j_k} =c_j\Id$ by definition of an operator solution.
+\end{itemize}
+\end{proof}
+
+\begin{remark}
+The reader will have noticed that in Lemma~\ref{lem:bcs-perfect} we carefully added the assumption that the operator solution is finite-dimensional, and indeed this seems necessary for the state $\ket{\psi}$ to be well-defined. It is possible to show that infinite-dimensional operator solutions to a BLS correspond to \emph{commuting-operator} strategies for the associated game, and conversely; this correspondence is established in~\cite{cleve2017perfect}. Commuting-operator strategies are a strict superset of tensor-product strategies  
+\end{remark}
+
+Combining Lemma~\ref{lem:bcs-perfect} with the operator solution to the Magic Square given by~\eqref{eq:opsol-ms} we obtain a perfect strategy for the Magic Square game that uses two qubits per player, and two EPR pairs shared between them. Since we saw that the Magic Square does not have a perfect classical strategy this strategy gives us another example of a non-signaling correlation that is not classical. 
+
+The following converse to Lemma~\ref{lem:bcs-perfect} is shown in~\cite{cleve2014characterization}. 
+
+\begin{lemma}\label{lem:bcs-tensor}
+Suppose given a BLS $(E,c)$ and a strategy $(\ket{\psi},A,B)$ for the associated game that succeeds with probability $1$. Then the BLS has a finite-dimensional operator solution. 
+\end{lemma}
+
+\begin{proof}
+We give the proof for the special case of the Magic Square game, as the general case is similar. We start with the modeling step: a strategy $(\ket{\psi},A,B)$ for the magic square game is given by a bipartite state $\ket{\psi} \in \mH_\reg{A} \otimes \mH_\reg{B}$ for finite-dimensional $\mH_\reg{A}$ and $\mH_{\reg{B}}$ as well as the following measurements. For the first player (Alice), for each row or column $j$ there is a $9$-outcome projective measurement $\{A_{ja} : a\in\{\pm 1\}^3\}$ on $\mH_\reg{A}$. For the second player (Bob), for each variable (square) $i$ there is an observable $B_{i}$ on $\mH_\reg{B}$. Note that here we assumed that the measurements made by each player are projective, which is without loss of generality by applying Naimark's theorem and enlarging the spaces $\mH_\reg{A}$ and $\mH_\reg{B}$ if necessary. 
+%For the proof we make the simplifying assumption that the state $\ket{\psi}$ has full support, in the sense that its reduced density on either subsystem is invertible. In general this assumption is not ``without loss of generality'', especially since we may have applied Naimark's theorem to make the player's measurements projective as assumed above, as this in general leads to a state that does not have full support. Nevertheless for the case of the present proof it is possible without too much work to reduce the general case to the ``projective, full-support'' case. We we refer to the proof of ``Case 2'' of Theorem 1 in~\cite{cleve2014characterization} for details. 
+
+To each of Alice's questions we can associate three observables that correspond to the three bits of her answer. For example, for question $j=1$ (first row) we can define 
+\[ A_1 = \sum_{a_1,a_2,a_3\in \{\pm 1\}}  a_1\, A_{1a_1a_2a_3}\;,\quad   A_2 = \sum_{a_1,a_2,a_3\in \{\pm 1\}} a_2\, A_{2a_1a_2a_3}\;,\quad  A_3 = \sum_{a_1,a_2,a_3\in \{\pm 1\}}  a_3\, A_{3a_1a_2a_3}\;.\]
+We can similarly proceed to define $A_4,\ldots,A_9$ from the rows and $A'_1,\ldots,A'_9$ from the columns. Next we show that success with probability $1$ in the consistency checks implies that 
+\begin{equation}\label{eq:bcs-tensor-1}
+\forall i\in\{1,\ldots,9\}\;,\qquad A_i = A'_i = B_i^T\;.
+\end{equation} 
+Take for example the consistency check on question $(1,2)$ (first row to Alice, second entry to Bob). It is easy to show that success in that check implies that 
+\begin{equation}\label{eq:bcs-tensor-2}
+\bra{\psi} A_2 \otimes B_2^T \ket{\psi}=1\;.
+\end{equation}
+ We use the following claim.
+
+\begin{claim}\label{claim:ab-state}
+Suppose that $\ket{\psi}$ is a bipartite state $A,B$ observables such that $\bra{\psi} A\otimes B \ket{\psi} = 1$. Let $\ket{\psi} = \sum_t \lambda_t \ket{u_t} \ket{v_t}$ be the Schmidt decomposition of $\ket{\psi}$, with $\lambda_t>0$ for all $t$ and $\{\ket{u_t}\}$ and $\{\ket{v_t}\}$ orthonormal families. Let  $S_A = \text{Span}\{\ket{u_t}\} \subseteq \mH_\reg{A}$ and $S_B=\text{Span}\{\ket{v_t}\} \subseteq \mH_\reg{B}$. Then $S_A$ is stable by $A$ and $S_B$ is stable by $B$. Moreover, letting $A_S$ denote the matrix of the restriction of $A$ to $S_A$ in the basis $\{\ket{u_t}\}$ and similarly for $B$, it holds that    $A_S=B_S^T$. 
+\end{claim}
+
+\begin{proof}[Proof sketch]
+Let $K = \sum_t \lambda_t \ket{u_t}\bra{v_t}$. Then the equality $\bra{\psi} A\otimes B \ket{\psi} = 1$ is equivalent to $AKB^T = K$. Identifying left and right eigenspaces we see that $A$ and $B$ must each preserve the eigenspaces of $K$ associated with any given eigenvalue. Thus $AKB^T = K$ decomposes in block form $\oplus_\lambda  A_\lambda B_\lambda^T = \Id_\lambda$, where for each block we indicated with a subscript $\lambda$ the restriction of each operator to the eigenspace of $K$ associated with eigenvalue $\lambda$. This shows the claim.  
+\end{proof}
+
+Using Claim~\ref{claim:ab-state} and the implications of the form~\eqref{eq:bcs-tensor-2} for the consistency checks,~\eqref{eq:bcs-tensor-1} follows, where the operators and the transpose should be understood to be written with respect to the Schmidt bases of $\ket{\psi}$. To conclude we claim that $B_1^T,\ldots,B_9^T$ (precisely, their restriction to the support of $\ket{\psi}$ on $\mH_\reg{B}$) are an operator solution to the Magic Square. Commutation in each row or column follows from~\eqref{eq:bcs-tensor-1} and the definition of the $A_y$ (which by definition commute by rows) and $A'_y$ (by columns). The constraints follow from the fact that e.g. for the first row, $\bra{\psi} A_1 A_2 A_3 \otimes \Id\ket{\psi} = +1$, which using Claim~\ref{claim:ab-state}  implies that $A_1A_2A_3 = \Id$ and hence $B_1^T B_2^T B_3^T = \Id$. (Of course we could remove the transpose signs and still have a valid solution.)
+\end{proof}
+
+
+
+\section{Motivation from complexity and cryptography}
+
+%We end by discussing some motivation for the study of nonlocal games that comes from complexity theory and cryptography. In particular, we discuss basic computational aspects of nonloal games. 
+
+In theoretical computer science nonlocal games are known as \emph{two-player}, or more generally \emph{multiplayer}, games. Multiplayer games arose independently in complexity theory and cryptography around the 1980s. 
+Their study can be motivated from the following vantage points: 
+\begin{itemize}
+\item \emph{Hardness of approximation for constraint satisfaction problems.} We can consider a natural generalization of BCS games to the case of an arbitrary constraint satisfaction problem. Consider the example of $3$SAT, and the associated ``clause-vs-variable'' game. This game is parametrized by a $3$SAT formula which is known to all parties. Once the game starts, the referee selects a clause $C = x \wedge y \wedge z$ (some of the variables may be negated) uniformly at random, as well as a variable $w\in\{x,y,z\}$ appearing in $C$, again uniformly at random. She sends the triple $\{x,y,z\}$ to Alice, and the single variable $w$ to Bob. Each player is expected to return an assignment to the variables he or she was asked about. The players win if and only if Alice's assignment satisfies the clause $C$, and Bob's assignment is consistent with Alice's on the variable they were asked in common.\\
+\end{itemize}
+
+\begin{exercise}
+Relate the maximum success probability in the clause-vs-variable game to the largest number of clauses of $\varphi$ that can be simultaneously satisfied by any assignment. Your relation need not be perfectly tight, but it should at least imply that the maximum success probability is $1$ if and only if the formula is satisfiable. 
+\end{exercise}
+
+From this construction we get an important consequence: Since $3$SAT is $\NP$-hard, it follows that in general the maximum classical success probability in a game specified explicitly (i.e.\ through a table specifying explicitly the distribution on questions and the truth table for valid answer tuples) is NP-hard to compute.\footnote{The reason that we need to clarify how the game is specified is that complexity is always a function of the input size. The size of a $3$SAT formula is the number of variables and constraints; for the reduction to imply hardness we need the size of the game to be roughly of the same order as this.}
+In fact, it follows from the PCP theorem that the maximum success probability is not only hard to compute exactly, but even to approximate within a sufficiently small constant factor. The language of games plays an important role in 
+Dinur's proof of the PCP theorem~\cite{dinur2007pcp}, and it has been instrumental in many reductions deriving hardness of approximation for combinatorial problems. It can also be a useful perspective when studying rounding techniques for linear programming (LP) or semidefinite programming (SDP) relaxations of constraint satisfaction problems. 
+
+
+Recall that the SDP formulation given in Section~\ref{sec:sdp-tsirelson} implies that $\beta^*(G)$ can be computed in polynomial time. So, for XOR games the maximum success probability of quantum tensor strategies can be computed exactly in polynomial time. What about more general types of clause-vs-variable games? In~\cite{} it was shown, with quite some work, that, for some games, the quantum value remains NP-hard. Much more surprising, and even harder, is that there are families of nonlocal games, indeed BCS games, such that deciding if the quantum bias equals $1$ or not is an \emph{undecidable} problem~\cite{}! Unfortunately we will not be able to cover this result here. We return to complexity-theoretic questions around the quantum value in the fourth lecture. 
+
+\begin{itemize}
+\item \emph{Interactive protocols in cryptography.} In cryptography, games play a role as building blocks in \emph{interactive protocols}, where the players are usually referred to as \emph{provers}. A famous game in this context is the two-prover commitment protocol by Ben-Or et al.~\cite{ben1988multi}. This protocol was introduced to show that all languages in NP have two-prover interactive proofs with perfect zero-knowledge. Technically the protocol gives rise to a two-round game: the referee first interacts with the first prover (commit phase), and then with the second prover (reveal phase). Many kinds of games arise in cryptography, with the players sometimes exchanging messages between themselves, some players being trusted (``oracles'') and others not, etc. 
+\end{itemize}
+
+
+
+
+
+%\paragraph{Notation.} In this lecture we use the non-standard notation 
+%$$ \ket{\phi_d} \,=\,\frac{1}{\sqrt{d}} \sum_{i=1}^d \ket{i}\ket{i}$$
+%for the maximally entangled state in $d$ dimension. In particular, $\ket{\phi_2}$ denotes an EPR pair. 

@@ -1,0 +1,307 @@
+\chapter{Rigidity}
+
+
+
+Interestingly, many nonlocal games have the property that the optimal quantum strategy for the players is essentially unique. This phenomenon, called \emph{rigidity}, can be leveraged to devise classical tests (the game) that verify that arbitrary quantum devices (the players) perform specific operations. This opens up a whole new world of possibilities, from the certification of information-theoretic randomness to ``device-independent'' security proofs in cryptography to protocols for delegated computation; we will touch on some of these topics in the fourth lecture. 
+
+
+
+%\section{Rigidity for quantum games}
+
+Let's look back at the proof of Theorem~\ref{thm:tsirelson}. If we try to make all inequalities tight, then we don't have much choice. First of all, for the third line we need to have $\vec{u}_0 = \frac{\vec{v}_0+\vec{v}_1}{\|\vec{v}_0+\vec{v}_1\|}$ and $\vec{u}_1 = \frac{\vec{v}_0-\vec{v}_1}{\|\vec{v}_0-v\vec{v}_1\|}$. So the only freedom is in choosing $\vec{v}_0$ and $\vec{v}_1$. But then to have equality in the application of the Cauchy-Schwarz inequality in the fourth line we need $\|\vec{v}_0+\vec{v}_1\|=\|\vec{v}_0-\vec{v}_1\|$ which, using that $\vec{v}_0$ and $\vec{v}_1$ are both unit vectors, requires $\vec{v}_0 \cdot \vec{v}_1 = 0$. Conversely, you can check that any two unit vectors $\vec{v}_0$ and $\vec{v}_1$ that are orthogonal will achieve the optimum (provided $\vec{u}_0,\vec{u}_1$ are defined from $\vec{v}_0,\vec{v}_1$ as indicated above). So the only freedom we have is which orthonormal pair to choose for $\vec{v}_0,\vec{v}_1$. However, note that any two orthonormal pairs are related by an orthogonal transformation, and the value of SDP($\mG$) is invariant under any orthogonal rotation of the $v_j$, provided the $\vec{u}_i$ are rotated in the inverse direction. So this last degree of freedom is unavoidable, and we have completely characterized the set of optimal vector solutions. 
+
+\begin{exercise}
+Suppose $\vec{u}_0,\vec{u}_1,\vec{v}_0,\vec{v}_1$ are unit vectors that achieve a value of $\frac{\sqrt{2}}{2}-\eps$, for some small $\eps>0$, in SDP($\mG_{\CHSH}$). Is the pair $(\vec{v}_0,\vec{v}_1)$ necessarily close to an orthonormal pair? If so, how would you measure distance to an orthonormal pair?  
+\end{exercise}
+
+The exercise above asks you to suggest a formulation of ``rigidity'' of the CHSH game at the level of vectors. Our goal in this lecture is to develop the tools for making similar statements directly at the level of the quantum strategy, i.e.\ the players' observables and shared quantum state. A result of our investigations will be a theorem stating that the quantum strategy for the CHSH game introduced in Example~\ref{ex:chsh-qbias} is  unique up to local rotations. But we'll go much further than the CHSH game and develop techniques that can be used to show rigidity statements for large classes of games, including all BLS games. 
+
+
+\section{Approximate group representations}
+\label{sec:approx-group}
+
+We first make a little detour through the theory of group representations. For $d$-dimensional matrices  $A,B$ and $\sigma$ such that $\sigma$ is positive semidefinite, write 
+$$\langle A,B\rangle_\sigma = \mathrm{Tr}(AB^* \sigma)\;,$$
+where we use $B^*$ to denote the conjugate-transpose. This is an extension of our earlier notation for the matrix inner product, which is recovered for $\sigma = \Id$. If $\sigma$ is the totally mixed state, then we obtain a dimension-normalized variant of the trace inner product. We will also write $\|A\|_\sigma = \langle A,A\rangle_\sigma^{1/2}$. This is a semi-norm, and it is a norm if $\sigma$ is invertible. 
+
+Given an arbitrary finite group $G$ (not necessarily abelian), a group representation of $G$ is a map $f:G \to U_d(\C)$, the group of $d\times d$ unitary matrices, such that $f$ is a homomorphism: for any $x,y\in G$, $f(x^{-1}y)=f(x)^* f(y)$, where we used $^*$ to denote the conjugate transpose (which, for unitary matrices, corresponds to taking the inverse). The following definition introduces a notion of \emph{approximate} group representation.  
+
+\begin{definition}\label{def:approx-rep}
+Given a finite group $G$, an integer $d\geq 1$, $\eps\geq 0$, and a $d$-dimensional positive semidefinite matrix $\sigma$ with trace $1$, an $(\eps,\sigma)$-representation of $G$ is a function $f: G \to U_d(\C)$, the unitary group of $d\times d$ matrices, such that 
+\begin{equation}\label{eq:gh-condition}
+\Es{x,y\in G} \,\Re\big(\big\langle f(x)^*f(y) ,f(x^{-1}y) \big\rangle_\sigma\big) \,\geq\, 1-\eps\;,
+\end{equation} 
+where the expectation is taken under the uniform distribution over $G$.
+\end{definition}
+
+Because $\Tr(\sigma)=1$ and $f$ is valued in the unitary matrices,~\eqref{eq:gh-condition} is equivalent to 
+\begin{equation}\label{eq:gh-condition-norm}
+\Es{x,y\in G} \, \big\| f(x)^*f(y) - f(x^{-1}y) \big\|_\sigma^2 \,\leq\, 2\,\eps\;.
+\end{equation} 
+
+\begin{remark}
+The condition \eqref{eq:gh-condition} in the definition is closely related to the Gowers $U^2$ norm
+$$\|f\|_{U^2}^4 \,=\, \Es{xy^{-1}=zw^{-1}}\, \big\langle f(x)f(y)^* ,f(z)f(w)^* \big\rangle_\sigma.$$
+While a large Gowers norm implies closeness to an affine function, we are interested in testing homomorphisms, and the condition \eqref{eq:gh-condition} will arise naturally from our calculations in the next section. 
+\end{remark}
+
+\section{The Gowers-Hatami theorem}
+
+There are many possible notions for approximate group representation. The most often considered one replaces the norm in~\eqref{eq:gh-condition-norm} by the operator norm. A disadvantage of that variant is that in general approximate representations are not always close to exact representations, even for very simple groups, e.g.\ $G=\Z_2$. In contrast, 
+Gowers and Hatami~\cite{gowers2015inverse} showed that in the case of Definition~\ref{def:approx-rep}, approximate group representations can always be ``rounded'' to a nearby exact representations. We state and prove a slightly more general, but quantitatively weaker, variant of their result.
+
+\begin{theorem}[Gowers-Hatami]\label{thm:gh}
+Let $G$ be a finite group, $\eps\geq 0$, and $f:G\to U_d(\C)$ an $(\eps,\sigma)$-representation of $G$. Then there exists a $d'\geq d$, an isometry $V:\C^d\to \C^{d'}$, and a representation $g:G\to U_{d'}(\C)$ such that 
+$$\Es{x\in G}\, \big\| f(x) - V^*g(x)V \big\|_\sigma^2\, \leq\, 2\,\eps.$$ 
+\end{theorem}
+
+Gowers and Hatami limit themselves to the case of $\sigma = d^{-1}I_d$, which corresponds to the dimension-normalized Frobenius norm. In this scenario they in addition obtain a tight control of the dimension $d'$, and show that one can always take $d'\ = (1+O(\eps))d$ in the theorem. We will see a much shorter proof than theirs (the proof is implicit in their argument) that does not seem to allow to recover this estimate. 
+
+Note that  Theorem \ref{thm:gh} does not in general hold  with $d'=d$. The reason is that it is possible for $G$ to have an approximate representation in some dimension $d$, but no exact representation of the same dimension: to obtain an example of this, take any group $G$ that has all non-trivial irreducible representations of large enough dimension, and create an approximate representation in e.g. dimension one less by ``cutting off'' one row and column from an exact representation. The averaging over all dimensions induced by the matrix $\sigma$ used to weigh the norm $\|\cdot\|_\sigma$ will in general barely notice this, but it will be impossible to ``round'' the approximate representation obtained to an exact one without modifying the dimension. 
+
+\begin{exercise}\label{ex:gh-pauli}
+Prove Theorem~\ref{thm:gh} for the case where $G$ is the single-qubit Weyl-Heisenberg group, which is the $8$-element matrix group $\mP$ generated by the Pauli $\sigma_X$ and $\sigma_Z$ matrices. \emph{[Hint: Consider $V:\C^d \to \C^{d'} \otimes \C^2$, where $\C^{d'} \simeq \C^d \otimes \C^2 $, defined by 
+$$V\ket{\varphi} = \frac{1}{2}\big((\Id_d\otimes \Id_2 + A_0 \otimes \sigma_X + A_1 \otimes \sigma_Z + A_0A_1 \otimes \sigma_X\sigma_Z)\otimes \Id_2 \big)(\ket{\varphi} \otimes \ket{\phi_2})\;,$$
+where $\ket{\varphi}$ is an arbitrary state in $\C^d$, $\ket{\phi_2}$ is an EPR pair on the last two copies of $\C^2$, and $A_0=f(\sigma_X)$, $A_1=f(\sigma_Z)$ act on $\C^d$. 
+ ]}
+\end{exercise}
+
+The main ingredient for the proof is an appropriate notion of Fourier transform over non-abelian groups. Given an irreducible representation $\rho: G \to U_{d_\rho}(\C)$, define 
+\begin{equation}\label{eq:fourier}
+ \hat{f}(\rho) \,=\, \Es{x\in G} \,f(x) \otimes \overline{\rho(x)}.
+\end{equation}
+In case $G$ is abelian, we always have $d_\rho=1$, the tensor product is a product, and \eqref{eq:fourier} reduces to the usual definition of Fourier coefficient. The only properties we will need of irreducible representations is that they satisfy the relation
+\begin{equation}\label{eq:ortho}
+\sum_\rho \,d_\rho\,\mathrm{Tr}(\rho(x)) \,=\, |G|\delta_{xe}\;,
+\end{equation}
+for any $x\in G$, where here $\delta_{xe}$ is the Kronecker $\delta$. Note that plugging in $x=e$ (the identity element in $G$) yields $\sum_\rho d_\rho^2= |G|$. 
+
+\begin{proof}[Proof of Theorem \ref{thm:gh}]
+Our first step is to define an isometry $V:\C^d \to \C^d \otimes (\oplus_\rho \C^{d_\rho} \otimes \C^{d_\rho})$ by
+$$ V :\;u \in \C^d \,\mapsto\, \bigoplus_\rho \,d_\rho^{1/2} \sum_{i=1}^{d_\rho} \,\big(\hat{f}(\rho) (u\otimes e_i)\big) \otimes e_i,$$
+where the direct sum ranges over all irreducible representations $\rho$ of $G$ and $\{e_i\}$ is the canonical basis. 
+Note what $V$ does: it ``embeds'' any vector $u\in \C^d$ into a direct sum, over irreducible representations $\rho$, of a $d$-dimensional vector of $d_\rho\times d_\rho$ matrices. Each (matrix) entry of this vector can be thought of as the Fourier coefficient of the corresponding entry of the vector $f(x)u$ associated with $\rho$. 
+The fact that $V$ is an isometry follows from the appropriate extension of Parseval's formula:  
+\begin{eqnarray*}
+& V^* V &= \sum_\rho d_\rho \sum_i (I\otimes e_i^*) \hat{f}(\rho)^*\hat{f}(\rho) (I\otimes e_i)\\
+&&= \Es{x,y}\,  f(x)^*f(y) \sum_\rho d_\rho \sum_i  (e_i^* \rho(x)^T \overline{\rho(y)} e_i)\\
+&&= \sum_\rho \frac{d_\rho^2}{|G|}I = I,
+\end{eqnarray*}
+where for the second line we used the definition \eqref{eq:fourier} of $\hat{f}(\rho)$ and  for the third we used \eqref{eq:ortho} and the fact that $f$ takes values in the unitary group.
+
+Next define
+$$g(x) = \bigoplus_\rho \,\big(I_d \otimes I_{d_\rho} \otimes \rho(x)\big), $$
+a direct sum over all irreducible representations of $G$ (hence itself a representation). Lets' first compute the ``pull-back'' of $g$ by $V$: following a similar calculation as above, for any $x\in G$, 
+\begin{eqnarray*}
+& V^*g(x) V  &=  \sum_{\rho}  d_\rho \sum_{i,j} (I\otimes e_i^*)\hat{f}(\rho)^* \hat{f}(\rho)(I\otimes e_j) \otimes e_i^* \rho(x) e_j ) \\
+&& =  \Es{z,y}\,  f(z)^*f(y)  \sum_{\rho}  d_\rho \sum_{i,j} (e_i^* \rho(z)^T \overline{\rho(y)} e_j) \big( e_i^* \rho(x) e_j \big) \\
+&& =  \Es{z,y}\,  f(z)^*f(y)  \sum_{\rho}  d_\rho \mathrm{Tr}\big( \rho(z)^T \overline{\rho(y)}  {\rho(x)^T} \big) \\
+&& =  \Es{z,y}\,  f(z)^*f(y)  \sum_{\rho}  d_\rho \mathrm{Tr}\big( \rho(z^{-1}y x^{-1}) \big) \\
+&& =  \Es{z}\,  f(z)^*f(zx) , 
+\end{eqnarray*}
+where the last equality uses \eqref{eq:ortho}.
+It then follows that 
+\begin{eqnarray*}
+\Es{x}\, \big\langle f(x), V^*g(x) V \big\rangle_\sigma \,=\,  \Es{x,z} \mathrm{Tr}\big( f(x) f(zx)^* f(z)\sigma\big).
+\end{eqnarray*}  
+This relates correlation of $f$ with $V^*gV$ to the quality of $f$ as an approximate representation and proves the theorem. 
+\end{proof}
+
+\section{Rigidity for the CHSH game}
+
+Now let's see what this all has to do with the CHSH game. We will use the theory of approximate group representations to prove the following theorem, originally due to~\cite{summers1988maximal} (with slightly weaker bounds; see also~\cite{mckague2012robust} for the $O(\sqrt{\eps})$ dependence).
+
+\begin{theorem}\label{thm:rigid-chsh}
+Let $\eps>0$, and suppose that a strategy for the players  in the CHSH game, using  a bipartite state $\ket{\psi}\in\C^d\otimes \C^d$ and observables $A_0,A_1$ for Alice and $B_0,B_1$ for Bob, achieves a bias at least $\sqrt{2}/2-\eps$ in the game. Then there are local isometries $V_A,V_B:\C^d \to \C^2 \otimes \C^{d'}$ such that 
+\begin{equation}\label{eq:chsh-state}
+\big\| V_A \otimes V_B \ket{\psi} - \frac{1}{\sqrt{2}}\big(\ket{00}+\ket{11}\big) \otimes \ket{\psi'} \big\|^2 = O(\sqrt{\eps}) \;,
+\end{equation}
+and 
+\begin{equation}\label{eq:chsh-alice}
+\big\|( V_A \otimes V_B)( A_0 \otimes \Id )\ket{\psi} - (\sigma_X \otimes \Id)\frac{1}{\sqrt{2}}(\ket{00}+\ket{11}) \otimes \ket{\psi'} \big\| \,=\, O\big(\sqrt{\eps}\big)\;,
+\end{equation}
+and a similar relation holds with $A_0$ replaced by $A_1$ and $\sigma_X$ replaced by $\sigma_Z$. Moreover, analogous relations hold for Bob's observables. 
+\end{theorem}
+
+It is important to note what the theorem says, and what it does not say. It does not say that the state $\ket{\psi}$ shared by the players must be close to an EPR pair --- it says that, \emph{up to local rotations}, the state must be close to an EPR pair \emph{tensored with an ancilla state}. Since local unitaries have no effect on the Schmidt coefficients, it does imply that the original state shared by the players have Schmidt coefficients that can be split into two roughly even batches --- and in particular, that there are at least two of them. 
+
+ The theorem also does not say anything about the observables $A_0$, $A_1$ themselves. Eq.~\eqref{eq:chsh-alice} only talks about the action of the observable \emph{on the state}. This is inevitable, as the game only ``observes'' this action. In particular, it is perfectly possible for $A_0$ to look like something completely arbitrary in a portion of space in which the reduced density of $\ket{\psi}$ on Alice's space is zero, or very small. But the theorem does say that, in terms of ``observable consequences'' only, the action of $A_0$ on $\ket{\psi}$ is comparable to the action of $\sigma_X$ on one half of an EPR pair. Although this may sound relatively weak, we will later see that this fact is extremely useful in applications. 
+
+
+\begin{proof}
+For the first step of the proof we follow Tsirelson's argument showing a bound of $\frac{\sqrt{2}}{2}$ on the quantum value of the CHSH game. Tsirelson's idea was to consider the square
+\begin{align}
+(A_0\otimes B_0 + A_0\otimes B_1 + A_1\otimes B_0 - A_1\otimes B_1 )^2 &=( (A_0+A_1)\otimes B_0 + (A_0-A_1)\otimes B_1 )^2\label{eq:bellop}\\
+&= 4\Id\otimes \Id + (A_1A_0-A_0A_1)\otimes (B_0B_1-B_1B_0)\;.\notag
+\end{align}
+This last term has operator norm at most $8$, and as a result the CHSH operator $A_0\otimes B_0 + A_0\otimes B_1 + A_1\otimes B_0 - A_1\otimes B_1$ has operator norm at most $\sqrt{8}$; Tsirelson's bound on the quantum value of CHSH follows by dividing by $4$ and observing that the players' choice of entangled state cannot beat the largest eigenvector.
+
+Furthermore, under the assumption that the strategy achieves a bias of at least $\sqrt{2}/2-\eps$ in the game, using $|\bra{\psi}X\ket{\psi}|^2 \leq \bra{\psi}XX^*\ket{\psi}$ for any Hermitian $X$, the left-hand side of~\eqref{eq:bellop}, when evaluated on $\ket{\psi}$, must be at least $8(1-\eps)^2$. Applying the Cauchy-Schwarz inequality it follows that both conditions
+$$\Tr((A_1A_0 + A_0A_1)^2\rho_A) = O({\eps})\qquad \text{and}\qquad \Tr((B_0B_1+B_1B_1)^2 \rho_B) = O({\eps})$$
+must hold, where $\rho_A$ and $\rho_B$ are the reduced density matrices of $\ket{\psi}$ on Alice and Bob respectively. 
+Using the notation introduced in Section~\ref{sec:approx-group}, this says that 
+\begin{equation}\label{eq:a-ac}
+\|A_0A_1 + A_1A_0\|_{\rho_A}^2 = O({\eps})\;,
+\end{equation}
+ i.e. $A_0$ and $A_1$ approximately commute. 
+
+Now here comes the key observation. Consider the $8$-element group $\mP$ generated by the Pauli matrices $\sigma_X$ and $\sigma_Z$, i.e. 
+$$\mP\,=\,\pm\big\{ \Id,\, \sigma_X,\,\sigma_Z,\, \sigma_X\sigma_Z\big\}\;.$$
+Then we claim that $A_0$ and $A_1$ induce an approximate representation of $\mP$, by setting 
+$$ f(\pm \Id)=\pm\Id,\quad f(\pm\sigma_X)=\pm A_0,\quad\quad f(\pm\sigma_Z)=\pm A_1,\quad f(\pm\sigma_X\sigma_Z) = \pm A_0A_1\;.$$
+Note that this is a legal definition, since $A_0$, $A_1$, and $A_0A_1$ are all unitary. Moreover, using only~\eqref{eq:a-ac} and the fact that $A_0$ and $A_1$ are observables, it is immediate to verify that the conditions of Theorem~\ref{thm:gh} are satisfied, i.e. $f$ is an $(O({\eps}),\rho_A)$-representation of $\mP$. 
+
+Applying the theorem, there must exist an exact representation of $\mP$ to which $f$ is close. However, the representation theory of $\mP$ is not complicated. It has four $1$-dimensional representations, but all of them map $-\Id$ to $1$, so they cannot be close to $f$. Hence we are left with the unique irreducible $2$-dimensional representation of $\mP$, which is precisely given by the Pauli matrices! With a little more careful work, this shows~\eqref{eq:chsh-alice}. Moreover, we can apply the  same considerations to Bob's operators $B_0$ and $B_1$, except that here we will choose to rotate the representation so that it sends $\sigma_X$ to the Hadamard matrix $H$ and $\sigma_Z$ to the matrix $G$. This is another valid representation; it is the same as the standard one, but rotated. 
+
+Finally we need to verify the condition on $\ket{\psi}$. Note that by assumption 
+$$ \frac{1}{4}\bra{\psi} A_0 \otimes B_0 + A_0 \otimes B_1 + A_1 \otimes B_0 - A_1\otimes B_1 \ket{\psi} \geq \frac{\sqrt{2}}{2} - \eps\;,$$
+which using~\eqref{eq:chsh-alice} implies 
+$$ \frac{1}{4} \bra{\psi}(V_A\otimes V_B)^\dagger \big( (\sigma_X \otimes H + \sigma_X \otimes G + \sigma_Z \otimes H - \sigma_Z\otimes G)\otimes\Id\big) (V_A\otimes V_B)\ket{\psi} \geq \frac{\sqrt{2}}{2} - O({\eps})\;,$$
+i.e. 
+\begin{equation}\label{eq:xz-v}
+\frac{1}{2}\bra{\psi}(V_A\otimes V_B)^\dagger \big( (\sigma_X \otimes \sigma_X + \sigma_Z \otimes \sigma_Z )\otimes \Id\big)(V_A\otimes V_B)\ket{\psi} \geq 1 - O({\eps})\;.
+\end{equation}
+Now observe that $\frac{1}{2}(\sigma_X \otimes \sigma_X + \sigma_Z \otimes \sigma_Z )$ is an observable with a single eigenvalue $1$, with associated eigenvector $\ket{\phi_2}$, and all other eigenvalues equal to $0$ or $-1$. Therefore,~\eqref{eq:xz-v} implies 
+\[ \big\|\big(\bra{\phi_2}\otimes \Id\big)(V_A\otimes V_B)|\psi\rangle\big\|^2 \,\geq\, 1-O({\eps})\;,\]
+which means that $(V_A\otimes V_B)|\psi\rangle = \ket{\phi_2} \otimes \ket{\psi'} + \ket{\psi''}$ for some sub-normalized states $\ket{\psi'}$ and $\ket{\psi''}$ such that $\|\ket{\psi''}\|^2 = O(\eps)$. This proves the theorem. 
+\end{proof}
+
+\section{Rigidity for the Magic Square game}
+
+We now investigate rigidity for the Magic Square game. As for the CHSH game, we will show that any near-optimal strategy has a specific structure by exhibiting (anti-)commutation relations that must be satisfied by any such strategy in the game.
+
+\subsection{The exact case}
+
+ As a warm-up, let's investigate the structure of operator solutions to the BLS system that underlies the Magic Square game. 
+
+\begin{lemma}\label{lem:ms-ac}
+Suppose given an operator solution $Y_1,\ldots,Y_9$ to the magic square BLS. Then $Y_2$ and $Y_4$ anti-commute. 
+\end{lemma}
+
+\begin{proof}
+We first rewrite the product $Y_2Y_4$ by rows to obtain 
+\begin{align*}
+Y_2 Y_4 &= Y_1 Y_3\cdot   Y_6 Y_5 \\
+&= Y_1 \cdot (-Y_9) \cdot Y_5\;,
+\end{align*}
+where the second line is by the last column constraint. Next we write the product $Y_4 Y_2$ by columns: 
+\begin{align*}
+Y_4 Y_2 &=  Y_1 Y_7 \cdot Y_8 Y_5  \\
+&= Y_1 \cdot Y_9 \cdot Y_5 \;,
+\end{align*}
+where the second line is by the last row constraint. Combining both equations it follows that $Y_2 Y_4 = -Y_4 Y_2$, as claimed. 
+\end{proof}
+
+Note that the same proof shows that any two observables that are not in the same row or column must anti-commute. Using furthermore the commutation conditions which are imposed for each row and column, it is possible to obtain the following full characterization of operator solutions, which we leave as an exercise. 
+
+\begin{exercise}\label{ex:ms-opsol}
+Let $Y_1,\ldots,Y_9$ be an operator solution to the Magic Square system. Show that there is an orthonormal basis with respect to which 
+\[ \begin{matrix} Y_1 = (I_2 \otimes \sigma_Z)\otimes \Id & Y_2 = (\sigma_Z\otimes I_2)\otimes \Id & Y_3=(\sigma_Z\otimes \sigma_Z)\otimes \Id \\
+Y_3 = (\sigma_X\otimes I_2)\otimes \Id & Y_4 = (I_2\otimes \sigma_X)\otimes \Id & Y_5 = (\sigma_X\otimes \sigma_X)\otimes \Id \\ Y_7 = (\sigma_X\otimes \sigma_Z)\otimes \Id & Y_8=(\sigma_Z\otimes \sigma_X)\otimes \Id & Y_9 = (\sigma_Y\otimes \sigma_Y)\otimes \Id \end{matrix}\;,\]
+where $I_2$ denotes the identity on $\C^2$ and $\Id$ is the identity on $\C^d$ for some $d$.
+\end{exercise}
+
+
+The following lemma is immediate from the proof of Lemma~\ref{lem:bcs-tensor} and Lemma~\ref{lem:ms-ac}.  
+
+\begin{lemma}\label{lem:ms-perfect}
+Suppose that a quantum tensor correlation
+\[ p(a,b|x,y)\,=\, \bra{\psi} A^x_a \otimes B^y_b\ket{\psi}\]
+  perfectly satisfies the referee's tests in the Magic Square game. Let $S_B$ denote the support of the reduced density $\rho_\reg{B}$ of $\ket{\psi}\in\mH_\reg{A}\otimes \mH_\reg{B}$ on $\mH_\reg{B}$.  Then the observables $B_1,\ldots,B_9$ stabilize $S_B$, and their restriction to that space form an operator solution to the Magic Square.
+\end{lemma}
+
+\begin{proof}
+The first part of the lemma follows from the proof of Lemma~\ref{lem:bcs-tensor}. By Lemma~\ref{lem:ms-ac} the observables associated to $y=2$ and $y=4$ anti-commute. 
+\end{proof}
+
+
+As a last step we show that we can also characterize the entangled state used by any strategy. Interestingly, this characterization comes as a consequence of the characterization of the observables, which we obtained without talking much about the state. This is based on the following general lemma. A version of the lemma was already used implicitly at the end of the proof of Theorem~\ref{thm:rigid-chsh}.
+
+\begin{lemma}\label{lem:epr-stable}
+Let $\ket{\psi}_{\reg{ABE}} \in (\C^2)_\reg{A}^{\otimes n} \otimes (\C^2)_\reg{B}^{\otimes n} \otimes \mH_\reg{E}$ be such that for every $i\in \{1,\ldots, n\}$ it holds that 
+\[\big(\sigma_{X,i}\big)_\reg{A} \otimes \big(\sigma_{X,i}\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\, \big(\sigma_{Z,i}\big)_\reg{A} \otimes \big(\sigma_{Z,i}\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\,\ket{\psi}_\reg{ABE}\;,\]
+where the Pauli operators act on the $i$-th copy of $\C^2$ in register $\reg{A}$ and $\reg{B}$ respectively. Then $\ket{\psi}_{\reg{ABE}} = \ket{\phi_2}^{\otimes n}_{\reg{AB}} \otimes \ket{aux}$, for some state $\ket{aux}$ on $\mH$. 
+\end{lemma}
+
+\begin{proof}
+Note that $\sigma_X\otimes \sigma_X$ and $\sigma_Z\otimes \sigma_Z$ commute, hence are simultaneously diagonalizable. 
+The proof immediately follows from the observation that the only simultaneous eigenvalue-1 eigenstate of $\sigma_X\otimes \sigma_X$ and $\sigma_Z\otimes \sigma_Z$ is the EPR pair $\ket{\phi_2}$. 
+\end{proof}
+
+\begin{exercise}
+Show that the conclusion of Lemma~\ref{lem:epr-stable} holds under the following weaker assumption: $\ket{\psi}_{\reg{ABE}} \in (\C^2)_\reg{A}^{\otimes n} \otimes \mH_\reg{B}^{\otimes n} \otimes \mH_\reg{E}$ with $\mH_\reg{B}$ arbitrary, and for every $i\in \{1,\ldots, n\}$,
+\[\big(\sigma_{X,i}\big)_\reg{A} \otimes \big(X_i\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\, \big(\sigma_{Z,i}\big)_\reg{A} \otimes \big(Z_i\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\,\ket{\psi}_\reg{ABE}\;,\]
+with $X_i$ and $Z_i$ arbitrary binary observables on $\mH_\reg{B}$. \emph{[Hint: Make a careful use of Claim~\ref{claim:ab-state}]}
+\end{exercise}
+
+
+\subsection{Consequences} 
+\label{sec:spatial-consequences}
+
+The characterization of operator solutions from Exercise~\ref{ex:ms-opsol} together with Lemma~\ref{lem:bcs-tensor} and Lemma~\ref{lem:epr-stable} have some nice consequences. First of all, they imply that the Magic Square game tests not one, but two qubits: any perfect strategy must have a $4$-qubit entangled state, two qubits per player, and Bob's observables specify two qubits, e.g.\ $B_2$ and $B_4$ for the first and $B_1$ and $B_5$ for the second. We even have access to more: for example, we know that when Bob is asked question $9$ the observable he applies is $\sigma_Y \otimes \sigma_Y$. 
+
+Another consequence of the characterization has to do with the problem of randomness certification. At this point we know that, in any perfect strategy, whenever Bob is asked question $2$ he measures the first qubit of an EPR pair in the standard basis. This has the following implications:
+\begin{enumerate}
+\item The answer reported by Bob on question $2$ (and, in fact, on \emph{any} question) is a uniformly random bit. In particular, no deterministic strategy can succeed in the game! We knew this already, because deterministic strategies are classical. As such, any game for which quantum strategies can succeed with strictly higher probability than classical strategies can serve as a ``test for randomness''.
+\item More importantly, the randomness that is generated by Bob at each execution of the game is ``fresh'' and ``private''. What we mean by this is that Bob's random bit is (1) independent of any information at the verifier's side, including Bob's question, and (2) uncorrelated to the environment. Indeed, since Bob's bit is the result of a measurement of half an EPR pair, the only party that can obtain correlated information is Alice, who holds the other half of the EPR pair. By the rigidity theorem this EPR pair \emph{must} be in control of Alice: she needs it for them to succeed in the game. Therefore the verifier has the guarantee that the bit she obtains (1) cannot have been ``planted'' \emph{a priori} in the devices, and (2) cannot be learned, even partially, by any third party distinct from $A$ and $B$, even if the party could a priori have kept entanglement with the devices---this is because, using the notation of Lemma~\ref{lem:epr-stable}, the third party would only at best have access to the entirety of system $\reg{E}$, which is uncorrelated with $\reg{AB}$. 
+\end{enumerate}
+These observations are important for cryptography, where the use of high-quality randomness that is uncorrelated from any possible eavesdropper or adversary is an essential resource. Indeed, the observations we just made form the basis for the so-called ``device-independent'' analysis of quantum cryptography protocols. 
+
+
+
+An important drawback of our analysis so far is that it is limited to the case of perfect strategies, i.e.\ strategies that succeed with probability $1$ in the game. In practice one may only reasonably assume, after multiple executions of the game, that a given strategy succeeds with some probability that is close to one, $1-\eps$ for some $\eps\geq 0$ that can be made small but not $0$. In the next section we discuss how the results can be extended to that case. 
+
+\subsection{The approximate case}
+
+The following theorem gives the flavor of an approximate version of the lemmas from the previous section. It is taken from~\cite{coladangelo2017robust}, where more general statements are shown for any BLS that satisfies appropriate conditions. (A similar result specialized to the case of the Magic Square game is shown in~\cite{wu2016device}.)
+
+\begin{theorem}\label{thm:ms-robust}
+Suppose that a strategy $(\ket{\psi},A,B)$ succeeds with probability $1-\eps$ in the Magic Square game, for some $\eps\geq 0$. Then there are isometries $V_\reg{D}:\mH_\reg{D}\to \C^2 \otimes \C^2 \otimes \mH_{\reg{D}'}$ for $D\in\{A,B\}$ such that
+\[ \big\| V_\reg{A} \otimes V_{\reg{B}} \ket{\psi}_{\reg{AB}} - \ket{\phi_2}\otimes \ket{\phi_2} \otimes \ket{aux} \big\|^2 \,=\, O\big(\sqrt{\eps}\big)\;,\]
+for some state $\ket{aux}$ on $\mH_{\reg{A'}}\otimes \mH_{\reg{B'}}$, and
+\begin{align} 
+\big\| \Id_\reg{A} \otimes \big( V_\reg{B} B_2 -  (\sigma_Z\otimes \Id \otimes \Id) V_\reg{B}\big)\ket{\psi}_{\reg{AB}}\big\|^2 &= O(\eps)\;,\label{eq:ms-z}\\
+\big\| \Id_\reg{A} \otimes \big( V_\reg{B} B_4 -  (\sigma_X\otimes \Id \otimes \Id) V_\reg{B}\big)\ket{\psi}_{\reg{AB}}\big\|^2 &= O(\eps)\;,\label{ea:ms-x}
+\end{align}
+and similar relations hold for the remaining seven observables on Bob's side. 
+\end{theorem}
+
+The proof of Theorem~\ref{thm:ms-robust} follows from Theorem~\ref{thm:gh} in a similar way as the proof of Theorem~\ref{thm:rigid-chsh}.
+
+\begin{proof}
+For the first step of the proof we follow the proof of Lemma~\ref{lem:ms-ac}, except that all equalities must be made approximate equalities. 
+Assume without loss of generality that Alice's strategy is specified by six $4$-outcomes projective measurements $\{A_{i,a_1,a_2,a_3}\}$, where $a_1,a_2,a_3\in\{\pm 1\}$ range over the four possible assignments that satisfy the constraint associated with the $i$-th row $(i\in \{1,2,3\})$ or $(i-3)$-th column ($i\in \{4,5,6\}$). (We can assume that Alice always returns a valid assignment because she knows that she will lose if not, so we do not even need to include a symbol for such evidently wrong answers in the game.)
+
+For any $i\in\{1,\ldots,9\}$, in addition to Bob's observable $B_i$ associated with question $i$ we define two observables from Alice's strategy, obtained by recording her answer associated to entry $i$ when she is asked the unique row containing $i$ --- call this observable $C_i$ --- or the unique column containing $i$ --- call this observable $C'_i$. Formally, $C_1 = \sum_{a_1,a_2,a_3\in\{\pm 1\}}a_1 A_{1,a_1,a_2,a_3}$, and similar relations can be used to define each $C_i$ and $C'_i$. Due to the parity constraints enforced on Alice's answers it is always the case that $C_1C_2C_3=+\Id,\ldots,C_3C_6C_9=-\Id$.
+ 
+By definition, success of the strategy in the game implies $18$ equations of the form 
+\begin{equation}\label{eq:ms-bc-1}
+ \bra{\psi} C_i \otimes B_i \ket{\psi} \,\geq \, 1-18\eps\qquad\text{and}\qquad \bra{\psi} C'_i \otimes B_i \ket{\psi} \,\geq \, 1-18\eps\;,
+\end{equation}
+for all $i\in \{1,\ldots,9\}$. Indeed, each such equation represents the probability that the players return valid answers, conditioned on each of the $18$ possible pairs of questions in the game. These relations allow us to mimic the proof of Lemma~\ref{lem:ms-ac}, as follows: 
+\begin{align*}
+B_2 B_4 \ket{\psi} & \approx C_4 \otimes B_2 \ket{\psi}\\
+&= C_5 C_6 \otimes B_2 \ket{\psi}\\
+&\approx C_5 C_6 C_2 \otimes \Id \ket{\psi}\\
+&= C_5 C_6 C_3 C_1 \otimes \Id \ket{\psi}\\
+&\approx C_5C_6C_3 \otimes B_1 \ket{\psi}\\
+&\approx C_5C_6\otimes B_1 B_3 \ket{\psi}\\
+&\approx C_5C'_6\otimes B_1 B_3 \ket{\psi}\\
+&\approx C_5C'_6 C'_3\otimes B_1  \ket{\psi}\\
+&=  C_5C'_9\otimes B_1  \ket{\psi}\;,
+\end{align*}
+where here we use the notation $\ket{u}\approx \ket{v}$ to mean $\|\ket{u} - \ket{v}\|^2 = O(\eps)$. Here, each of the approximations is obtained by bounding the squared norm of the difference using the Cauchy-Scharz inequality and the required relation; for example, for the first approximation we write
+\begin{align*}
+ \big\|(\Id \otimes B_2 B_4 - C_4 \otimes B_2)\ket{\psi}\big\|^2
+&= \big\|(\Id \otimes B_2)(\Id\otimes B_4 - C_4 \otimes \Id)\ket{\psi}\big\|^2\\
+&= \big\|(\Id\otimes B_4 - C_4 \otimes \Id)\ket{\psi}\big\|^2\\ 
+&= 2 - 2 \bra{\psi} B_4 \otimes C_4 \ket{\psi} \\
+& \leq 36\eps\;,
+\end{align*}
+where the derivation uses that $B_2,B_4$ and $C_4$ are Hermitian and square to identity. 
+Using a similar chain of approximations starting from $B_4 B_2 \ket{\psi}$, we conclude that $\|\Id\otimes \{B_2,B_4\}\ket{\psi}\|=O(\sqrt{\eps})$. It follows that $B_2$ and $B_4$ induce an approximate representation of the group $\mP$ introduced in Exercise~\ref{ex:gh-pauli} by setting 
+$$ f(\pm \Id)=\pm\Id,\quad f(\pm\sigma_Z)=\pm B_2,\quad\quad f(\pm\sigma_X)=\pm B_4,\quad f(\pm\sigma_X\sigma_Z) = \pm B_4B_2\;.$$
+Note that this is a legal definition, since $B_2$, $B_4$, and $B_2B_4$ are all unitary. Moreover, using only the approximate anti-commutation and the fact that $B_2$ and $B_4$ are observables it is immediate to verify that the conditions of Theorem~\ref{thm:gh} are satisfied, i.e. $f$ is an $(O({\eps}),\rho_\reg{B})$-representation of $\mP$, where $\rho_\reg{B}$ denotes the reduced density of $\ket{\psi}$ on $\mH_\reg{B}$.  
+
+Applying the theorem, there must exist an exact representation $g$ of $\mP$ to which $f$ is close. The proof then concludes exactly as the proof of Theorem~\ref{thm:rigid-chsh}.
+\end{proof}

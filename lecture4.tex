@@ -1,0 +1,372 @@
+
+\chapter{The class MIP$^*$}
+
+In this lecture we  introduce quantum multi-prover interactive proof systems, discuss the recent characterization $\MIP^*=\RE$, and examine some consequences. 
+
+\section{Multiprover interactive proofs  with entangled provers}
+
+We start with the main complexity-theoretic definition. Recall that a \emph{promise language}\footnote{Here the \emph{promise} refers to the fact that it is not required that $L_{yes}\cup L_{no} = \{0,1\}^*$}  $L=(L_{yes},L_{no})$ is specified by a pair of disjoint subsets $L_{yes},L_{no}$ of $\{0,1\}^*$ and that a \emph{complexity class} is a collection of languages. 
+
+\begin{definition} \label{def:mipstar}
+The class $\MIP^*$ is the class of promise languages $L = (L_{yes}, L_{no})$ such that there is a classical polynomial-time Turing machine $M$ that on input $1^n$ returns the description of classical circuits for the verifier $V_n$ in a nonlocal game with \emph{two} quantum players (also called \emph{provers} in this context) $A$ and $B$ such that: 
+\begin{itemize}
+\item (Completeness:) There is a family of quantum provers $\{A_n,B_n\}_{n\in \N}$ 
+such that for all $x\in L_{yes}$ the interaction of $V_{|x|}$ and $A_{|x|}, B_{|x|}$ on common input $x$ accepts with probability at least $\frac{2}{3}$.
+\item (Soundness:) For any family of quantum provers $\{A_n,B_n\}_{n\in \N}$, for all $x\in L_{no}$ the interaction of $V_{|x|}$ and $A_{|x|},B_{|x|}$ on common input $x$ accepts with probability at most $\frac{1}{3}$.
+\end{itemize}
+\end{definition}
+
+ In general one may allow interaction with more than two provers and more than one round; however the two-prover setting is sufficiently interesting for our purposes, and connects most directly with nonlocal games. (Furthermore, it can be shown that in purely complexity-theoretic terms there is no gain to considering more than $2$ provers or more than $1$ round.)
+
+
+\medskip
+
+The goal in complexity theory is to relate different classes of languages . This is especially interesting when the classes are defined in very different terms, as relations between them can provide insights into different models of computation. A pertinent example is the famous equality $\IP = \PSPACE$ due to~\cite{lund1992algebraic,shamir1992ip}. Among the two classes, $\PSPACE$ is the simplest to define: this is the class of all languages that can be decided using a polynomial amount of space, and arbitrary time. A complete problem for $\PSPACE$ is the \emph{quantified Boolean formula} (QBF) problem, which is to decide if a formula of the form $\exists x_1 \forall x_2 \exists x_3\cdots  \, (x_1 \wedge x_2 \wedge \neg x_3) \vee (\cdots)$ is satisfiable. Clearly this can be done in polynomial space by trying out all possibilities; it is also possible to show that any problem that is solvable in $\PSPACE$ can be reduced to this one, and so we say that QBF is \emph{complete} for $\PSPACE$. The class $\IP$ is defined very differently: it is the class of languages $L$ such that membership $x\in L_{yes}$ can be decided efficiently by a randomized polynomial-time verifier interacting with a single infinitely powerful prover (so this is the single-prover analogue of $\MIP^*$).  While it is not too hard to show that $\IP \subseteq \PSPACE$, the converse inclusion is not easy at all --- to see why, try coming up with a verification protocol for the QBF problem, and keep in mind that the prover is not to be trusted!
+
+Our goal in this lecture is to characterize the complexity of $\MIP^*$. The motivation for doing so it to gain insights about computation and entanglement. And possibly more!
+
+Before we do this let's first review what is known about the classical analogue of $\MIP^*$, in which the provers are restricted to classical strategies.  This restriction affects both the completeness and soundness requirements in Definition~\ref{def:mipstar}, and so generally any restriction of the set of allowed strategies for the provers will lead to a different complexity class. 
+
+
+\subsection{Classical multiprover interactive proof systems}
+\label{sec:classical-mip}
+
+The $^*$ in $\MIP^*$ refers to the fact that provers are allowed to use entanglement. If we omit it we get the class $\MIP$ of languages that have classical multiprover interactive proof systems. It was shown by Babai, Fortnow and Lund in the early 1990s that $\MIP =  \NEXP$. This was shown shortly after the aforementioned result $\IP = \PSPACE$, which characterizes the unexpectedly large verification power of single-prover interactive proof systems.  
+
+Let's recall how $\MIP = \NEXP$ is shown. 
+ The inclusion of $\MIP \subseteq \NEXP$ is not hard to obtain. To show it we give a non-deterministic exponential time algorithm that exactly computes the maximum acceptance probability of the verifier in an $\MIP$ protocol. This algorithm can therefore, given an instance $x$ and a description of the verifier $V_{|x|}$, determine whether $x\in L_{yes}$ (the maximum success probability is $\geq \frac{2}{3}$) or $x\in L_{no}$ (the maximum success probability is $\leq \frac{1}{3}$), promised that one of them is the case, and thus decide any language $L\in \MIP$; thus $\MIP\subseteq \NEXP$ follows. To devise such an algorithm first observe that in order to do so it suffices to consider the maximum over deterministic strategies, as for any randomized strategy there is a deterministic one that succeeds with at least the same probability. Now note that a deterministic strategy is specified by a list of answers to each possible question for each of the provers. There are at most exponentially many questions because the bit representation of each question must have polynomial length (since the verifier runs in polynomial time) and similarly for answers. Finally, the success probability of a deterministic strategy can be computed exactly in exponential time simply by executing the verification procedure on each possible tuple of questions, weighted by the probability of the question being asked. Therefore, a non-deterministic algorithm can, in exponential time and space, guess an optimal strategy and compute its success probability. 
+
+The reverse inclusion, $\NEXP\subseteq \MIP$, is harder. To get a hint of how it is shown, consider the problem of verifying that an exponential-size graph is $3$-colorable. Formally, an instance $x$ of this problem is specified by a pair $x=(1^n,C)$ where $1^n$ denotes an integer $n$ written in unary, and $C$ is the description of a classical circuit $C:\{0,1\}^n \times \{0,1\}^n \to \{0,1\}$. Any $x$ that does not take this form is neither in $L_{yes}$ nor in $L_{no}$, and need not be considered any further.\footnote{As usual, we consider that circuits are represented in some given, fixed manner, e.g.\ as a list of gates and bits that they act on.}  The circuit $C$ implicitly specifies a graph $G_x = (V_x,E_x)$ with vertex set $V_x = \{0,1\}^n$ and edge set $E_x$ such that $(i,j)\in E_x$ if and only if $C(i,j)=1$. Then $L_{yes}$ (resp. $L_{no}$) is the set of all strings $x$ such that $G_x$ is well-defined and is $3$-colorable (resp. not $3$-colorable). It is known that the language $L=(L_{yes},L_{no})$ is complete for NEXP; intuitively this is a ``scaled-up'' version of the result that $3$-coloring of $n$-vertex graphs is $\NP$-complete. Now consider the following description for the actions of the verifier in a candidate multiprover interactive proof system for $L$: 
+\begin{enumerate}
+\item The verifier parses its input $x$ as $x=(1^n,C)$. 
+\item The verifier selects a pair of vertices $(i,j)$ uniformly at random in $\{0,1\}^n\times \{0,1\}^n$. She sends $i$ to Alice and $j$ to Bob.
+\item Alice and Bob each reply with a color $a,b\in \{0,1,2\}$. 
+\item The verifier accepts if and only if any of the following conditions hold: $C(i,j)=0$ (there is no edge); $i=j$ and $a=b$ (same color for identical vertices); $C(i,j)=1$ and $a\neq b$ (different colors for neighboring vertices).\footnote{One may modify this protocol by having the verifier only send pairs $(i,j)$ such that either $i=j$ or $(i,j)$ is an edge, since the other case is an automatic ``free ride'' for the provers; we gloss over this point here.}
+\end{enumerate}
+It is clear that this protocol has completeness $1$: whenever $G_x$ is $3$-colorable there is a winning strategy for the provers. Moreover, a moment's thought will reveal that if $G_x$ is not $3$-colorable then there is no perfect winning strategy; hence the maximum probability of success in this case is at most $1-2^{-\Omega(n)}$ (because any strategy must fail on at least one question). While this is a separation between the two cases, it is not sufficient to establish soundness, which requires that the maximum probability of success for an $x\in L_{no}$ be at most $\frac{1}{3}$. 
+
+What the proof of the inclusion $\NEXP \subseteq \MIP$ shows is that there is in fact a much better verifier, somewhat more involved than the one that we described here, which is such that whenever the graph is not $3$-colorable then the maximum success probability is at most $\frac{1}{3}$. Achieving such a protocol essentially entails finding an efficient method that, informally, maps any graph to another graph of polynomially related size such that graphs that are $3$-colorable are mapped to graphs that remain $3$-colorable, but graphs that are not $3$-colorable are mapped to graphs that are \emph{very far} from $3$-colorable. Achieving this can be done using advanced tools from the theory of error-correcting codes; we will not be able to say more in this lecture and refer the interested reader to e.g.~\cite{arora2009computational}.\footnote{Technically such a reduction is not obviously necessary, because the definition of $\MIP$ allows more complicated protocols than the $3$-coloring game described here. Nevertheless, using appropriate manipulations it is possible to show that any proof of $\NEXP \subseteq \MIP$ does imply such a reduction.} 
+
+\subsection{Interactive proof systems with entangled provers}
+
+
+
+Our focus is the class $\MIP^*$. What does the characterization $\MIP= \NEXP$ say about it? Not much! The most important point to realize here is that allowing the provers to use entanglement is a double-edged sword:
+
+ First, it can affect the soundness property by allowing the provers to ``cheat'', meaning achieve a higher success probability. We already saw a good example of this with the Magic Square game. 
+While this game doesn't quite look like the $3$-coloring protocol we  introduced in the previous section, by transforming it it is possible to come up with explicit instances of the latter that are associated with non-colorable graphs but such that there nevertheless exists a quantum strategy which succeeds with probability $1$; see for example~\cite{ji2013binary}. 
+
+As a result we are unable to transfer the lower bound $\NEXP \subseteq \MIP$ in a ``black-box'' manner, and the only trivial lower bound on $\MIP^*$ is $\PSPACE$, as clearly the verifier can ignore all but one of the provers and execute any classical $\IP$ protocol with the remaining prover. In fact it is interesting to note that such a ``collapse'' to $\IP$ does take place when one allows even more power to the provers, in the form of arbitrary non-signaling strategies as defined in Section~\ref{sec:ns-cor}. Indeed it is not hard to see that the non-signaling constraints are linear, so that it is possible to write the optimal success probability of non-signaling provers in a multiprover interactive proof system as an exponential-size linear program (LP). Using that linear programs can be solved in time polynomial in their size it can be shown that the class of interactive proof systems with non-signaling provers, denoted $\MIP^{ns}$, lies in $\EXP$. Furthermore, if the number of provers is fixed to $2$ and the number of rounds of interaction to $1$ then the class ``collapses'' even further to $\PSPACE$, because the associated LP can be solved more efficiently than a general LP; see~\cite{ito2010polynomial}. 
+
+Second, entanglement can also affect the completeness property by increasing the power of the provers in the ``honest'' case. If we start with a classical protocol for a problem in $\NEXP$ this is not so interesting, because we already know that the provers have a good strategy without entanglement --- we are not making use of the fact that they can do even better with entanglement, and indeed this fact is a new nuisance that we have to deal with in order to establish the soundness property. But what if we start from a more complex problem, that does not necessarily lie in $\NEXP$, and attempt to design a protocol such that completeness 
+\emph{requires} the use of entanglement? 
+
+To see how far one might hope to go in this direction we ought to think about \emph{upper bounds} on $\MIP^*$. Recall from the previous section that for $\MIP$ we simply enumerated over all possible strategies. In the quantum setting it is not so direct: since we do not place a priori bounds on the complexity of the provers, it is unclear what dimension one should choose in order to find an optimal strategy. If one was able to show an upper bound on the dimension that is sufficient to approach the optimal success probability (as a function of the size of the protocol) then one would automatically get a corresponding upper bound on the complexity of $\MIP^*$. However, no such bound is known! The only upper bound on $\MIP^*$ is the following folklore result: 
+
+\begin{lemma}\label{lem:mip-in-re}
+$\MIP^* \subseteq \RE$, the set of recursively enumerable languages. 
+\end{lemma} 
+
+\begin{proof}
+Recall that a language $L=(L_{yes},L_{no})$ is recursively enumerable if there exists a Turing machine such that on input $x$, if $x\in L_{yes}$ then the Turing machine eventually halts and accepts, whereas if $x\in L_{no}$ then the Turing machine may either halt and reject, or it may never halt. 
+
+Consider the Turing machine $M$ that on input $x$ specifying a verifier $V_{|x|}$ searches in increasing dimension and with increasing accuracy for a good strategy in the associated protocol. Since we have not introduced a precise formalism for strategies in $\MIP^*$ protocols --- we will do so for two-prover one-round protocols in Section~\ref{sec:nlgames} --- we cannot make this too precise. At present it is sufficient to think intuitively that each prover is specified by a dimension of the Hilbert space on which they act, and for each possible question they may receive, in any round, a POVM on their space that is used to determine an answer; these POVM act on an initial quantum state that lies in the tensor product of the prover's Hilbert spaces. (Any unitary actions the provers may take can be incorporated in the POVMs.) For any given dimension $d$ and accuracy $\eps$ the space of strategies in dimension at most $d$ can be discretized to a finite set such that the optimum success probability over elements of that set will be within an additive $\eps$ of the optimum over all strategies in dimension at most $d$. 
+
+If $x\in L_{yes}$ by definition there must exist a finite dimension $d$ and a strategy in dimension $d$ that succeeds with probability at least (say) $\frac{2}{3}-\frac{1}{100}$; eventually, taking into account discretization errors $M$ will identify a strategy that succeeds with probability at least $\frac{2}{3}-\frac{2}{100}$ and halt with acceptance, having successfully ruled out the case that $x\in L_{no}$. However, in case $x\in L_{no}$ the Turing machine will never find a strategy with success larger than $\frac{1}{3} + \frac{1}{100}$ (where the $\frac{1}{100}$ accounts for possible discretization errors and can be made arbitrarily small), but it will not be able to rule out the existence of such a strategy either; indeed, for all it knows such a strategy may exist in ``just one more dimension''. 
+\end{proof}
+
+For a long time it was unclear where the complexity of $\MIP^*$ lies, between the two ``trivial'' extremes of $\IP$ and $\RE$. In 2012 Ito and the author showed that $\NEXP \subseteq \MIP^*$ by adapting the proof of $\NEXP \subseteq \MIP$ by Babai et al. In the past few years better lower bounds were obtained. Quite astonishingly, in 2018 Natarajan and Wright~\cite{natarajan2019neexp} showed that $\NEEXP \subseteq \MIP^*$. One reason that this is ``astonishing'' is because $\NEEXP$ is a strictly (unconditionally) larger class that $\NEXP$, and so their result established unconditionally that the presence of entanglement \emph{increases} the verifier's ability to verify languages, even though the latter's complexity has not changed at all (it remains classical polynomial-time)! Building on this result in 2020 Ji et al.~\cite{ji2021mip} obtained the following characterization. 
+
+\begin{theorem}\label{thm:mip-re}
+$\MIP^* = \RE$. 
+\end{theorem}
+
+A complete problem for the class $\RE$ is the \emph{halting problem}: given the description of a Turing machine $M$ as input, does $M$ eventually halt? What Theorem~\ref{thm:mip-re} shows is that this problem, even though it is \emph{not decidable}, can be efficiently \emph{verified} by asking questions to two provers sharing entanglement. In purely complexity-theoretic terms this is an extremely surprising result in and for itself; note that $\RE$ contains \emph{any} bounded time or space complexity class --- and much more. The following two lectures will be devoted to a sketch of the main arguments that go in the proof of the theorem; these arguments involve the design of tests for multiple qubits as well as delegation protocols and so we will be on familiar terrain. Aside from the complexity theory it turns out that the characterization $\MIP^* = \RE$ has some interesting consequences in the foundations of quantum mechanics as well as in the theory of operator algebras which we discuss next. 
+
+\section{Consequences}
+
+Theorem~\ref{thm:mip-re} is related to a problem in the foundations of quantum non-locality called \emph{Tsirelson's problem}, itself connected to a problem in the theory of von Neumann's algebra usually referred to as \emph{Connes' Embedding Problem} (CEP). To explain the connection we first make a digression and discuss strategies for computing \emph{upper bounds} on the quantum value $\omega^*(\mG)$.
+
+
+
+
+\subsection{Computing upper bounds on $\omega^*(\mG)$}
+\label{sec:ub-game}
+
+Let's put Theorem~\ref{thm:mip-re} aside for a moment and aim instead to contradict it by devising an algorithm that approaches the maximum success probability of quantum provers sharing entanglement in a two-prover one-round interactive proof system with verifier $V$. Equivalently, suppose that given an explicit game $\mG$ we aim to approximate the quantum value $\omega^*(\mG)$. In the proof of Lemma~\ref{lem:mip-in-re} we already saw an algorithm, let's call it algorithm $A$, that returns an increasing sequence of lower bounds 
+\[ v_1 \leq v_2 \leq \cdots \leq v_k \leq \cdots \leq \omega^*(\mG)\]
+by enumerating strategies in increasing dimension and with increasing level of accuracy. Using the definition~\eqref{eq:qval} of the entangled value it is clear that $v_k \to_{k\to\infty} \omega^*(\mG)$. To make algorithm $A$ into an actual approximation algorithm we need to have a sense of when to stop, e.g.\ when can we guarantee that $|v_k -\omega^*(\mG)|\leq \frac{1}{100}$?\footnote{The bound $\frac{1}{100}$ is arbitrary; we want it to be small enough to guarantee that the algorithm can eventually distinguish $\omega^*(\mG)\geq\frac{2}{3}$ from $\omega^*(\mG) \leq\frac{1}{3}$, so any bound $<\frac{1}{6}$ would do.} A natural approach is to construct a companion algorithm $B$ that constructs a decreasing sequence of \emph{upper} bounds 
+\[ w_1 \geq w_2 \geq \cdots \geq w_k \geq \cdots \geq \omega^*(\mG)\;.\]
+Given algorithms $A$ and $B$ consider a third algorithm $C$ that given a game $\mG$ as input runs both algorithms in an interleaved fashion, computing $v_1,w_1,v_2,w_2$, etc., halts whenever $|v_k-w_k|\leq \frac{1}{100}$ and returns ``YES'' if and only if $\frac{1}{2}(v_k+w_k) > \frac{1}{2}$. Now suppose that both $(v_k)$ and $(w_k)$ converge to $\omega^*(\mG)$. Then $C$ always terminates. Moreover, if $\omega^*(G) \geq \frac{2}{3}$ then $w_k \geq \frac{2}{3}$ for all $k$ and so the value returned is at least $\frac{1}{2}((\frac{2}{3}-\frac{1}{100})+\frac{2}{3})=\frac{2}{3}-\frac{1}{50} > \frac{1}{2}$, whereas if $\omega^*(\mG) \leq \frac{1}{3}$ it is at most $\frac{1}{2}(\frac{1}{3}+(\frac{1}{3}+\frac{1}{100}))=\frac{1}{3}+\frac{1}{50} < \frac{1}{2}$. Thus $C$ correctly distinguishes between the two cases. 
+
+So how do we determine such a sequence of upper bounds $(w_k)$?
+A general approach to finding an upper bound on the optimum of some optimization problem is to consider \emph{relaxations} of the problem, i.e.
+ optimization problems whose optimum is easier to find and is guaranteed to be at least as large as the original optimum. For example, consider the following relaxation
+\begin{align}
+\omega^*(\mG) &=\sup_{\ket{\psi}, \{A^x_a\},\{B^y_b\}} \; \sum_{x,y}\, \pi(x,y) \sum_{a,b} \,V(x,y,a,b) \bra{\psi} A^x_a \otimes B^y_b \ket{\psi}\notag \\
+&\leq \sup_{\ket{u^x_a},\ket{v^y_b} }\; \sum_{x,y} \,\pi(x,y) \sum_{a,b}\, V(x,y,a,b) \bra{u^x_a } v^y_b\rangle\;,\label{eq:sdp-1}
+\end{align}
+where the supremum on the second line is over all families of vectors $\ket{u^x_a},\ket{v^y_b} \in \mH_\reg{A}\otimes \mH_\reg{B}$ such that for every $x$, the $\{\ket{u^x_a}\}_a$ are orthogonal and $\sum_a \|\ket{u^x_a}\|^2 = 1$; similarly for the $\ket{v^y_b}$. The inequality~\eqref{eq:sdp-1} is verified by setting $\ket{u^x_a} = A^x_a \otimes \Id \ket{\psi}$ and $\ket{v^y_b} = \Id \otimes B^y_b \ket{\psi}$. So~\eqref{eq:sdp-1} is a relaxation, very similar to the one we saw for XOR games in Section~\ref{sec:sdp-tsirelson} --- except that here, it is provably not tight. What did we gain in the process? Crucially, since the objective function in~\eqref{eq:sdp-1} only depends on the inner products between the vectors, without loss of generality we can restrict the vectors to lie in a Hilbert space $\mH$ such that $\dim(\mH) \leq \min( |\mX||\mA|,|\mY||\mB|)$; this is true even if the original $\mH_\reg{A}$ and $\mH_\reg{B}$ were much larger. This means that by exhaustive search we can find arbitrarily good approximations to the optimum~\eqref{eq:sdp-1}, without having to go beyond a certain fixed dimension that is determined by the size of the game. In fact,~\eqref{eq:sdp-1} is an optimization problem that falls in the class of \emph{semidefinite programs} (informally, linear optimization problems over affine sections of the positive semidefinite cone) and can be solved in time polynomial in its size (as opposed to exponential for exhaustive search). 
+
+So the optimum~\eqref{eq:sdp-1} \emph{can} be determined efficiently. How useful is it, i.e.\ how good is the inequality \eqref{eq:qval} $\leq$ \eqref{eq:sdp-1}? Unfortunately, in general there can be an arbitrarily large (multiplicative) gap between the two~\cite{junge2011large}, and in particular it can be that $\omega^*(\mG) \leq \frac{1}{3}$ but~\eqref{eq:sdp-1}$\geq \frac{2}{3}$.\footnote{This fact is not obvious, and constructing such ``bad examples'' is quite difficult. For some restricted types of games, such as XOR games or unique games, the inequality can be shown to be exact or close to exact respectively.} The relaxation we have devised is thus too coarse for us to obtain a good algorithm right away. 
+ But maybe we can do better? What we did so far consists in adding a vector variable to represent $A^x_a \otimes \Id \ket{\psi}$ and $\Id \otimes B^y_b \ket{\psi}$. Each of these can be thought of as a degree-$1$ monomial in the matrix variables $\{A^x_a,B^y_b\}$, evaluated on $\ket{\psi}$. Considering vectors obtained from higher-degree monomials would allow us to impose more constraints, as for example we could require that 
+\[ \big(\bra{\psi} A^x_a  \otimes \Id \big)\cdot \big( A^x_a \otimes B^y_b \ket{\psi}\big)\,=\,  \big(\bra{\psi}\Id \otimes \Id \big)\cdot \big( A^x_a \otimes B^y_b \ket{\psi}\big)\;,\]
+due to $\{A^x_a\}_a$ being projective. It is not hard to think of other such constraints. For any integer $k\geq 1$ let's define
+\begin{equation}\label{eq:opt-sdpk}
+w_k\,=\, \sup_{ \Gamma^{(k)} \geq 0 } \;\sum_{x,y}\, \pi(x,y) \sum_{a,b}\, V(x,y,a,b) \Gamma^{(k)}_{xa,yb}\;,
+\end{equation}
+where the supremum is taken over all positive semidefinite matrices $\Gamma^{(k)}$ of dimension ${|\mX||\mA|+|\mY||\mB| \choose k}\times {|\mX||\mA|+|\mY||\mB| \choose k}$. Here we think of the entries of $\Gamma^{(k)}$ as being labeled by sequences $(z_1,c_1),\ldots,(z_k,c_k)$ where $z_i \in \mX\cup\mY$ and $c_i \in \mA\cup\mB$, and $\Gamma^{(k)}$ is the Gram matrix of the associated vectors 
+\[\ket{u_{(z_i,c_i)_{1\leq i \leq k}}} \,=\, C^{z_k}_{c_k} \cdots C^{z_1}_{c_1} \ket{\psi}\;,\]
+where $C^z_c = A^z_c\otimes \Id$ if $z\in \mX$ and $c\in \mA$, $C^z_c = \Id \otimes B^z_c$ if $z\in \mY$ and $c\in \mB$, and $C^z_c=0$ otherwise. In addition, we add any linear constraint on the entries of $\Gamma$ that follows from the facts that $\{A^x_a\}$ and $\{B^y_b\}$ are projective measurements for all $x,y$, and that they act on different tensor factors and hence commute. 
+
+With this definition we can verify that $w_1 =$ \eqref{eq:sdp-1}; this follows since any positive semidefinite matrix $\Gamma$ has a factorization as a matrix of inner produces. Moreover, $w_1 \geq w_2 \geq \cdots \geq w_k \geq \omega^*(\mG)$ since each successive level in the ``hierarchy'' consists in adding additional variables and constraints. Finally, using standard algorithms for semidefinite programs the optimization problem at the $k$-th level can be solved in time polynomial in its size, i.e.\ time $(|\mX||\mA|+|\mY||\mB|)^{O(k)}$.
+ Let's call Algorithm B the algorithm that on input $k$ returns $w_k$.\footnote{Technically we need to allow B to return an approximation to $w_k$. Since well-behaved semidefinite programs such as~\eqref{eq:opt-sdpk} can be solved in time polynomial in their size and in the logarithm of the desired accuracy we could e.g. require that $B$ returns an additive approximation of $w_k$ that is within error at most $2^{-k}$; this will suffice for our purposes.} 
+
+\subsection{The commuting value and Tsirelson's problem}
+
+Unfortunately it is not the case that $w_k\to_{k\to\infty} \omega^*(\mG)$. Indeed, if this were the case algorithm $C$ would return arbitrarily good approximations to $\omega^*(\mG)$ and thus contradict Theorem~\ref{thm:mip-re}. Nevertheless, since $(w_k)$ is non-increasing and larger than $\omega^*(\mG)$ the sequence must converge to some value.  Interestingly, this value is a natural quantity that is referred to as the \emph{commuting value} of the game and defined as
+\begin{equation}\label{eq:val-com}
+\omega^{com}(G) \,=\, \sup_{\ket{\psi}, \{A^x_a\},\{B^y_b\}} \; \sum_{x,y} \,\pi(x,y) \sum_{a,b} \,V(x,y,a,b) \bra{\psi} A^x_a  B^y_b \ket{\psi}\;,
+\end{equation}
+where the supremum is taken over all states $\ket{\psi} \in \mH$ where $\mH$ is a (possibly infinite-dimensional) separable Hilbert space and families of projective measurements $\{ A^x_a\}$ and $\{  B^y_b \}$ on $\mH$ such that for all $x,y,a,b$, $A^x_a$ and $B^y_b$ commute. Since $A \otimes \Id$ and $\Id \otimes B$ always commute it always holds that $\omega^*(G) \leq \omega^{com}(\mG)$. The hierarchy of values $(w_k)$ is introduced in~\cite{navascues2008convergent}, where they show the following convergence result. 
+
+\begin{lemma}
+For any game $\mG$ it holds that $\lim_{k\to\infty} w_k = \omega^{com}(\mG)$.
+\end{lemma}
+
+\begin{proof}
+First note that by definition $\omega^{com}(\mG)\leq \lim_{k\to\infty} w_k$, since none of the constraints imposed on the definition~\eqref{eq:opt-sdpk} of $w_k$ makes use of the tensor product structure other than to say that $A^x_a \otimes \Id$ and $\Id\otimes B^y_b$ commute. 
+
+The remainder of the proof shows the reverse inequality. For any $k\geq 1$ fix a feasible solution $\Gamma^{(k)}$ to the optimization problem~\eqref{eq:opt-sdpk}. The entries of $\Gamma^{(k)}$ are indexed by pairs of monomials $m$ in non-commutative variables $\{A^x_a,B^y_b\}$ of degree at most $k$. 
+%Ordering all monomials of degree at most $k$ in an arbitrary order $(m_1,\ldots,m_\ell)$ we can represent the solution as a matrix $\Gamma^{(k)} \in \C^{\ell\times\ell}$ such that $\Gamma^{(k)}_{m_1,m_2} = \bra{m_1} m_2\rangle$. 
+Crucially, the constraints on the optimization problem require that (i) $\Gamma^{(k)} \geq 0$, and (ii) this matrix satisfies $\Gamma^{(k)}_{m_1,m_2}=\Gamma^{(k)}_{n_1,n_2}$ whenever both entries are well-defined and $m_1 m_2^* = n_1 n_2^*$ as monomials in $\{A^x_a,B^y_b\}$, because by definition any such constraint is imposed on the optimization problem. 
+
+For any monomial $m$ and integer $k$ at least as large as the degree of $m$ let $\tau_k(m) = \Gamma^{(k)}_{m,1}$. 
+Extend $\tau_k$ to a linear form on all non-commutative polynomials by setting $\tau_k(m)=0$ if $m$ has degree larger than $k$ and extending by linearity. Since $|\tau_k|\leq 1$ for each $k$ (this can be verified because the diagonal entries of $\Gamma^{(k)}$ are all constrained to equal $1$, so using (i) all entries of $\Gamma^{(k)}$ must have modulus at most $1$) by the Banach-Aleoglu theorem the sequence $(\tau_k)_{k\geq 1}$ admits a pointwise convergent subsequence $(\tau_{k_i})_{k_1\leq k_2\leq\cdots}$; let $\tau$ be the pointwise limit. Now crucially we observe that $\tau$ is a positive linear form. Indeed, for any polynomial $p = \sum_m \alpha_m m$ where $m$ ranges over monomials we have 
+\begin{align*}
+ \tau(p^*p) &= \lim_i \;\tau_{k_i}(p^*p) \\
+&=  \lim_i \;\sum_{m,m'} \,\alpha_m^* \alpha_{m'} \,\tau_{k_i}(m^*m') \\
+&= \lim_i \;\alpha^\dagger \Gamma^{(k_i)} \alpha\\
+& \geq 0\;,
+\end{align*}
+where for the first line we used linearity of $\tau_{k_i}$, for the second line we used the definition of $\tau_{k_i}$ (the equality holds for all $i$ such that $k_i \geq \deg(p)$), for the third line we let $\alpha = (\alpha_m)$ and used property (ii), and for the last we used property (i). 
+
+At this point we may conclude in a single abstract step by invoking the GNS construction from $C^*$-algebra theory: for any positive linear functional $\tau$ on a $C^*$-algebra $\mA$ there is a $*$-representation $\pi$ of $\mA$ on a Hilbert space $\mH$ and a unit vector $\ket{\xi}\in \mH$ such that 
+\begin{equation}\label{eq:tau-pi}
+\forall a\in\mA\;,\qquad \tau(a) \,=\, \bra{\xi} \pi(a)\ket{\xi}\;.
+\end{equation}
+ For us $\mA$ is the algebra of non-commutative polynomials in $\{A^x_a,B^y_b\}$ with complex coefficients satisfying the POVM and commutation conditions, and so the image $\tilde{A}^x_a = \pi(A^x_a)$, $\tilde{B}^y_b = \pi(B^y_b)$, together with the state $\ket{\xi}$, immediately gives us a commuting strategy for $G$ with value $\lim_k w_k$: 
+\begin{align*}
+\lim_{k\to\infty} w_k = \lim_{i\to\infty}\; w_{k_i} 
+&= \lim_{i\to\infty} \;\sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \Gamma^{(k_i)}_{xa,yb}\\
+&= \lim_{i\to\infty} \;\sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \Gamma^{(k_i)}_{(xa,yb}\\
+&= \lim_{i\to\infty} \;\sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \tau_{k_i}((xa,yb))\\
+&= \sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \tau((xa,yb))\\
+&= \sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \bra{\xi} \pi(xa,yb) \ket{\xi}\\
+&= \sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \bra{\xi} \pi(xa)\pi(yb) \ket{\xi}\\
+&= \sum_{x,y}\, \pi(x,y) \sum_{a,b} \, V(x,y,a,b) \bra{\xi} \tilde{A}^x_a \tilde{B}^y_b \ket{\xi}\;,
+\end{align*}
+where the first line is by definition of $w_{k_i}$, the second line by the linear constraints (ii), the third by definition of $\tau_{k_i}$, the fourth by definition of $\tau$, the fitfth by~\eqref{eq:tau-pi}, the sixth because $\pi$ is a representation and the last by definition of $\tilde{A}^x_a $ and $\tilde{B}^y_b$. 
+
+It is also possible to finish the construction more concretely by defining an infinite-dimensional matrix $\Gamma = \lim_i \Gamma^{(k_i)}$, where for the limit to make sense we embed each $\Gamma^{(k_i)}$ as the top left corner of an infinite-dimensional matrix by padding with zeroes. Since all finite minors of $\Gamma$ are positive semidefinite, it is positive semidefinite and therefore admits a factorization $\Gamma_{m,m'} = \bra{m}m'\rangle$ for some $\{\ket{m}\}$ in a Hilbert space $\mH$. We can then define $\tilde{A}^x_a$ as the projection on the span of all $\ket{m}$ such that $m = A^x_a m' $ for some $m'$, i.e.\ the first variable of monomial $m$ is $A^x_a$. Using the relations satisfied by the inner products between the vectors $\ket{m}$ (i.e.\ condition (ii) above) it is possible to verify that the $\tilde{A}^x_a$ together with analogously defined $\tilde{B}^y_b$ and $\ket{\psi} = \ket{1}$ satisfy the required conditions for a commuting strategy, and that the associated value is once again $\lim_k w_k$.
+\end{proof}
+
+The two values $\omega^*(\mG)$ and $\omega^{com}(\mG)$ were introduced by Tsirelson in a series of papers laying the foundations for the mathematical study of non-locality~\cite{tsirelson1993some}. Rather than using the language of games (which at the time was not much in use yet), Tsirelson directly studied the underlying \emph{correlation sets} defined as 
+\begin{align}
+C^*(n,k) &= \big\{\, \big(\langle \psi, A^x_a \otimes B^y_b \psi \rangle\big)_{a,b,x,y} \,:\;\mH_\reg{A},\mH_\reg{B}\text{ Hilbert spaces},\,\psi \in \mH_\reg{A}\otimes \mH_\reg{B},\,\|\psi\|=1,\notag\\
+&\qquad\forall (x,y)\in \{1,\ldots,n\}^2,\, \{A^x_a\}_{a\in \{1,\ldots,k\}}, \{B^y_b\}_{b\in \{1,\ldots,k\}} \text{ POVM on $\mH_\reg{A}$, $\mH_\reg{B}$ resp.}\big\}\;,\label{eq:qc}\\[3mm]
+C^{com}(n,k) &= \big\{\, \big(\langle \psi, A^x_a  B^y_b \psi \rangle\big)_{a,b,x,y} \,:\;\mH\text{ Hilbert space},\,\psi \in \mH,\,\|\psi\|=1,\notag\\
+&\hskip3.5cm\forall (x,y)\in \{1,\ldots,n\}^2,\, \{A^x_a\}_{a\in \{1,\ldots,k\}}, \{B^y_b\}_{b\in \{1,\ldots,k\}} \text{ PVOM on $\mH$}\notag\\
+&\hskip3.5cm\text{ s.t. }[A^x_a,B^y_b]=0\;\forall (a,b)\in \{1,\ldots,k\}^2\big\}\;.\footnote{These are more often denoted $C_q(n,k)$ and $C_c(n,k)$. I adopted the present notation for consistency with the game value.}\label{eq:qs}
+ \end{align}
+By taking direct sums of POVMs and scaled vectors it is not hard to see that both sets are convex subsets of $[0,1]^{n^2k^2}$. Note that in the definition of $C^*(n,k)$ we did not restrict the dimension of $\mH_\reg{A}$ and $\mH_\reg{B}$ to be finite. This is to match Tsirelson's presentation; for our purposes the distinction is not important as it is not hard to see that allowing infinite-dimensional strategies in the definition of the entangled value $\omega^*(G)$ does not change the supremum.\footnote{To show this, observe that any state $\ket{\psi}\in \mH_\reg{A} \otimes \mH_\reg{B}$, even in infinite dimensions, always has a Schmidt decomposition $\ket{\psi} = \sum_i \lambda_i \ket{u_i}\ket{u_i}$ such that $\sum_i \lambda_i^2 = 1$. $\ket{\psi}$ can be arbitrarily well approximated in finite dimension by truncating the coefficients; using that the restriction of a POVM to a subspace is a POVM we find arbitrarily good approximations to the game value in finite dimension.}\footnote{It does change the definition of the set however: as shown in~\cite{coladangelo2018unconditional} some elements of $C^*(n,k)$ cannot be represented in finite dimensions.}
+However, in case the Hilbert spaces in \emph{both} definitions are taken to be finite-dimensional then the two sets can be shown to coincide. (This fact essentially follows from von Neumann's Double Commutant Theorem, though it can also be shown directly; we skip the proof.)
+In his paper Tsirelson states as ``fact'' the claim that $C^*(n,k)=C^{com}(n,k)$ for arbitrary separable Hilbert spaces and all $n,k\geq 1$. Having realized that a proof of the claim seemed elusive (with the inclusion $C^*(n,k)\subseteq C^{com}(n,k)$ that we already observed being the only obvious one), in a subsequent note\footnote{``Bell inequalities and operator algebras'', available at \url{https://www.tau.ac.il/~tsirel/download/bellopalg.pdf}.} Tsirelson reformulates the ``fact'' as an open problem and, realizing that the answer may be negative, formulates as an ``even more important'' problem the question of whether the closure $\overline{C^*(n,k)}=C^{com}(n,k)$. (Here the overline designates closure in the usual topology for $\R^{n^2k^2}$. It is not hard to verify that $C^{com}$ is closed.) Two and a half decades after its introduction Tsirelson's first problem was solved by Slofstra~\cite{slofstra2019set}, who used techniques from the theory of nonlocal games to show the existence of finite $n,k$ such that $C^*(n,k)\neq C^{com}(n,k)$. Until the proof of Theorem~\ref{thm:mip-re}, an apparently purely complexity-theoretic result, Tsirelson's ``even more important problem'' remained open. However, we can now observe the following corollary to Theorem~\ref{thm:mip-re}. 
+
+\begin{corollary}\label{lem:re-tsirelson}
+There exists finite $n,k\geq 1$ such that  $\overline{C^*(n,k)}\subsetneq C^{com}(n,k)$. 
+\end{corollary} 
+
+\begin{proof}
+Suppose for contradiction that $\overline{C^*(n,k)}= C^{com}(n,k)$ for all $n,k\geq 1$. As an immediate consequence, for any game $\mG$ it holds that $\omega^*(\mG) = \omega^{com}(\mG)$. Therefore, algorithm C described in Section~\ref{sec:ub-game} always converges in finite time to a correct answer. This contradicts Theorem~\ref{thm:mip-re}, which implies that the problem ``Given a game $\mG$, is $\omega^*(\mG) \geq \frac{2}{3}$ or $\omega^*(\mG) \leq \frac{1}{3}$?'' is undecidable.
+\end{proof}
+
+Note how indirect the proof of Lemma~\ref{lem:re-tsirelson} is! In particular, while it asserts the existence of $n,k$ there is no obvious way to determine what these integers are, or even upper bounds on them, from the proof. In fact it is possible to tweak the argument to get an explicit construction; we refer to~\cite{ji2021mip} for more. 
+
+
+\subsection{Connes Embedding Problem}
+
+\footnotetext{The brief discussion in this section is adapted from~\cite{vidick2019operator}.}
+
+Quantum mechanics and the theory of operator algebras have been intertwined since their origin. In the 1930s~\cite{von1932mathematische} von Neumann laid the foundations for the theory of (what are now known as) von Neumann algebras with the explicit goal of establishing Heisenberg's matrix mechanics on a rigorous footing (quoting from the preface, in the translation by Beyer: ``The object of this book is to present the new quantum mechanics in a unified representation which, so far as it is possible and useful, is mathematically rigorous''). Following the initial explorations of Murray and von Neumann the new theory took on a life of its own, eventually leading to multiple applications unrelated to quantum mechanics, such as to free probability or noncommutative geometry. 
+
+In his 1976 paper completing 
+ the classification of injective von Neumann algebras~\cite{connes1976classification} Connes made a casual remark that has become a central conjecture in the theory of operator algebras. Since we do not have the mathematical language to express it precisely, I will paraphrase Connes' remark as the comment that ``any finite von Neumann algebra \emph{ought to} be well-approximated by finite-dimensional matrix algebras.'' (In more formal terms, CEP states that every von Neumann algebra type II$_1$ factor embeds into an ultrapower of the hyperfinite II$_1$ factor.) Although this conjecture may at first seem rather specific (and in fact as far as I know Connes himself did not pursue the question any further than the remark made in his paper), in the two decades that followed the problem rose to prominence thanks to the work of other mathematicians, such as Kirchberg and Voiculescu, who gave equivalent reformulations of the conjecture in operator algebras and free probability. (See e.g.~\cite{Capraro2015} for more reformulations.)
+Kirchberg's formulation is closest to us: Kirchberg showed that CEP is equivalent to the \emph{QWEP conjecture} about the equivalence of the minimal and maximal tensor products on the full group $C^*$ algebra of a nonabelian free group~\cite{kirchberg1993non}.\footnote{Concretely, a $C^*$ algebra can always be represented as a sub-algebra of the algebra of bounded linear operators on a Hilbert space that is closed under taking adjoints, and closed under the norm topology. A von Neumann algebra is further restricted to be closed under the weak toperator topology.} 
+Informally, the minimal and maximal tensor products of two $C*$ algebras provide two ways to define the closure of the algebraic tensor product, with respect to two different norms, the minimal norm 
+\[ \|x\|_{min} = \sup_{\pi_A,\pi_B} \;\big\|\pi_A\otimes \pi_B( x)\big\|\]
+where the supremum ranges over all pairs of representations $\pi_A : C^*(\F_2) \to \mB(\mH_\reg{A})$ and $\pi_B : C^*(\F_2) \to \mB(\mH_\reg{B})$, whereas
+\[ \|x\|_{max} = \sup_{\pi} \;\|\pi( x)\|\;\]
+where here $\pi: C^*(\F_2) \otimes  C^*(\F_2)\to \mB(\mH)$ is any representation that is such that $\pi(a\otimes b)=\pi_A(a)\pi_B(b)$ where  $\pi_A,\pi_B : C^*(\F_2) \to \mB(\mH)$ are representations with commuting range. Clearly, $\|x\|_{min} \leq \|x\|_{max}$ always, and these two norms can be seen to be the smallest and largest ``reasonable'' norms that one may put on the tensor product of two $C^*$-algebras.
+
+With this reformulation it may not be surprising that Kirchberg's QWEP is directly related to Tsirelson's problem, and indeed building on work of Fritz~\cite{fritz2012tsirelson} and Junge et al.~\cite{junge2011connes} Ozawa~\cite{ozawa2012connes} showed that Tsirelson's ``even more important'' problem is equivalent to CEP. This brings us to a second corollary of Theorem~\ref{thm:mip-re}.
+
+\begin{corollary}
+CEP has a negative answer, i.e.\ there exists a von Neumann algebra that is not hyperfinite. 
+\end{corollary}
+
+For more background on the relation between Tsirelson's problem and Kirchberg's conjecture, presented in an accessible way, I recommend~\cite{fritz2012tsirelson}. For additional results and the connection to CEP, presented in a less accessible way, I recommend~\cite{ozawa2013connes}. 
+
+
+\section{An overview of the proof of $\RE\subseteq \MIP^*$}
+
+
+\subsection{A cartoon version}
+\label{sec:cartoon}
+
+At the highest level our proof strategy is as follows. Recall from the previous lecture that for the case of classical protocols one can show the inclusion $\NEXP \subseteq \MIP$. While by itself this is already non-trivial, let's take as our starting point the assumption that we are able to show an analogous inclusion for quantum interactive proofs, i.e.\ $\NEXP \subseteq \MIP^*(2,1)$.\footnote{This inclusion is shown in~\cite{ito2012multi} for $5$ provers. The $2$-prover version follows from the work in~\cite{ji2020quantum}.} Observe that this inclusion can be recast as a form of delegation. Paraphrasing, the inclusion states that any language $L\in \NEXP$ has a multiprover interactive proof systems with quantum provers. Now for any Turing Machine $M$ the language $L_M $ that consists of all  $n$  such that there is a string $y\in\{0,1\}^*$ such that $M$ accepts $(n,a)$ in time at most $\exp(n)$ lies in $\NEXP$;\footnote{This formulation is a bit unusual due to the use of the letter $n$ to represent the input, which is usually called $x$; this is for later convenience.  Here $n$ is written in binary. Note that the time bound implies that without loss of generality $|y|\leq \exp(n)$.} moreover for some choices of $M$ it is $\NEXP$-complete.\footnote{An example would be to take $M$ the Turing machine that parses $n$ as an implicitly represented graph $n=(1^{n'},C)$ and expects $y$ to be an explicit coloring for the $2^{n'}$ vertices of the graph; see Section~\ref{sec:classical-mip}.} Thus there is an efficient reduction from Turing machines $M$ to verifiers $V$ such that for all integer $n$, on input $z$ such that $|z|=n$, 
+\begin{equation}\label{eq:cond-nexp-1}
+ \exists a\,:\quad\text{$M$ accepts $(z,a)$ in time $\leq \exp(n)$}
+\end{equation}
+ then $\omega^*(V_n(z))\geq \frac{2}{3}$, and if no such $a$ exists then $\omega^*(V_n(z))\leq \frac{1}{3}$. 
+Now suppose that we're able to achieve a somewhat stronger reduction, where for the starting point we replace the condition~\eqref{eq:cond-nexp-1} by
+\begin{equation}\label{eq:cond-nexp-2}
+\text{\emph{On average over} } x\sim \mU_N\,,\; \quad \Pr_x\Big( \exists a\,:\;M \text{ accepts $(z,x,a)$ in time $\leq \exp(n)$}\Big)\geq \frac{2}{3}\;,
+\end{equation}
+where $N=2^n$ and for every $n$, $\mU_N$ is the uniform distribution on $\{0,1\}^N$. (Suppose also that a symmetric condition holds for soundness.) This would be a form of delegation for (exponential-time) AM (``Arthur-Merlin'') protocols, where an AM protocol is one in which the verifier can send a uniformly random string as question to the prover before receiving the proof.  Note that the step we just made is highly non-trivial because of the introduction of a distribution on $x$; delegating randomized computations like this is hard because there is no easy means to verify that the computation is being performed with the ``right choice'' of the random string $x$---indeed, we need to make sure to detect cases where it might be that there exists $(x,a)$ such that $M$ accepts $(n,x,a)$, but it is still very unlikely to be the case when $x$ is chosen at random. As we will see later the use of quantum provers and entanglement will be useful to achieve this. 
+
+Let's do one last leap of faith and suppose that we have an even stronger reduction, that applies directly to exponential-size multiprover interactive proofs. Precisely, we'd replace the condition~\eqref{eq:cond-nexp-2} by
+\begin{equation}\label{eq:cond-nexp-3}
+\text{\emph{On avg over} } (x,y)\sim \mU_N\times \mU_N\,,\;  \Pr_{(x,y)}\Big(\exists (a,b) \,: \; M \text{ accepts $(z,x,y,a,b)$ in time $\leq \exp(n)$}\Big)\geq \frac{2}{3}\;,
+\end{equation}
+where in addition we'd require that $(a,b)$ are generated locally by quantum provers sharing entanglement, such that the provers are given $x$ and $y$ respectively; formally, given $(x,y)$ the pair $(a,b)$ should be distributed as $\bra{\psi} A^x_a \otimes B^y_b \ket{\psi}$ for some state $\ket{\psi}$ (independent of $(x,y)$) and POVM $\{A^x_a\}$ and $\{B^y_b\}$. Once again we'd also require a symmetric condition with probabilities $\leq \frac{1}{3}$ for soundness. 
+
+Let's call the resulting reduction a ``compression'' procedure: it takes as input an exponential-time  verifier $V$ and returns a polynomial-time verifier $V^\compr$ that has the same completeness and soundness properties: if there is a good strategy for $V_n$ there is also one for $V\compr_n$ and vice-versa. Then I claim that by iterating this compression procedure we could obtain progressively stronger inclusions, from $\EXP \subseteq \MIP^*$ to $\EEXP\subseteq \MIP^*$ to .... any time complexity that is a finite tower of exponentials.\footnote{We could do the same argument for non-deterministic time complexities, but it is easier to present in the deterministic case. The place where we do need non-determinism is for the compression procedure.}
+Recall that for well-chosen $M$, the problem of given an integer $n$, does $M$ halt in at most $2^n$ steps is $\EXP$-complete. Now suppose that e.g. we have a family of verifiers $\{V_n\}$, implicitly depending on $M$, such that $\omega^*(V_n) \geq \frac{2}{3}$ if $M$ halts in $\leq 2^n$ steps, and $\omega^*(V_n) \leq \frac{1}{3}$ otherwise; such a family follows from $\EXP \subseteq \MIP^*(2,1)$. Now define $\{V^\compr_n\} = \compr(\{V_{2^n}\})$. Then by definition   $\omega^*(V^\compr_n) \geq \frac{2}{3}$ if $\omega^*(V_{2^n}) \geq \frac{2}{3}$ if $M$ halts in $\leq 2^{2^n}$ steps, and similarly $\omega^*(V^\compr_n) \leq \frac{1}{3}$ otherwise. Thus $\EEXP\subseteq \MIP^*$. Iterating this procedure and stretching things a little bit, this would give us the inclusion $\TIME(T(n))\subseteq \MIP^*$ for any computable function $T$. And then taking the ``limit'', we'd get $\RE\subseteq \MIP^*$...?
+
+Obviously there's a lot of moving pieces in this description. The goal in this lecture is to make them sufficiently precise as to be believable, and eventually arrive at a core ``nugget'' that encapsulates the key step that needs to be proven---which we'll do in the next lecture. For now we focus on, first, setting things up so that the above sketch can be made more precise, and second, discussing in more detail the ``compression'' procedure, which is the key part where the use of quantum provers is essential. 
+
+
+\subsection{The Halting problem}
+
+Recall from the last lecture that the two main consequences of $\RE\subseteq\MIP^*$ that we discussed, negative answers to Tsirelson's problem and to Connes' Embedding Conjecture, both follow from the fact that the problem ``Given a two-player one-round game $G$ such that $\omega^*(G) \geq \frac{2}{3}$ or $\omega^*(G) \leq \frac{1}{3}$, which is the case?'' is undecidable. In this lecture we will show that there is a computable map $\mF$ from Turing Machines $M$ to games $G=G_M$ such that if $M$ halts then $\omega^*(G)\geq \frac{2}{3}$, whereas if $M$ does not halt then $\omega^*(G) \leq \frac{1}{3}$. To argue that this indeed shows that the aforementioned problem is undecidable, we recall the proof that the Halting problem is undecidable. 
+
+\begin{definition}
+The language $L_\halt$ is the set of all $x\in\{0,1\}^*$ such that 
+ $x$ is the description of a Turing Machine $M$ such that $M$, when it is executed on an empty tape, eventually halts. 
+\end{definition}
+
+For convenience we use the notation $\ol{M}\in\{0,1\}^*$ to denote the description of a Turing Machine $M$, using some canonical representation. Recall that there exists a ``universal'' Turing machine $\mU$ that on input $\ol{M}$ and $x$ simulates the execution of $M$ on input $x$. 
+
+\begin{lemma}\label{lem:halt}
+The language $L_\halt$ is undecidable. 
+\end{lemma}
+
+\begin{proof}
+Suppose for contradiction that there exists a Turing Machine $A$ such that given as input $\ol{M}$, $A$ halts with ``YES'' in case $M$ halts on the empty tape, and $A$ halts with ``NO'' otherwise. Now consider the following Turing Machine $B$. When run on an empty tape, $B$ first executes $A$ on $\ol{B}$. If $A$ halts with ``YES'' then $B$ enters an infinite loop. If $A$ halts with ``NO'' then $B$ halts with ``YES''. Does $B$ halt? We have reached a contradiction, therefore $A$ does not exist. 
+\end{proof}
+
+Note that in the proof of Lemma~\ref{lem:halt} we designed a Turing Machine $B$ that at some point performs an instruction that depends on its own ``source code'' $\ol{B}$. That this is allowed is a consequence of Kleene's recursion theorem, which is basically a generalization of the standard diagonalization argument. We will use this possibility again later. 
+
+
+\subsection{Compression}
+
+We make more precise what we need of the magical ``compression procedure'' discussed in Section~\ref{sec:cartoon}. First we introduce a restricted class of verifiers. 
+
+\begin{definition}
+A \emph{normal form verifier} is a Turing Machine $V$ that on input $n$ returns the description of a Turing Machine $R_n$ (the ``referee,'' or ``decision procedure'') that on input $(x,y,a,b)\in \{0,1\}^{4n}$ returns a value $d\in \{0,1\}$. To $R_n$ we associate a two-player one-round game $G_n$ whose question and answer sets are $X=Y=A=B= \{0,1\}^n$ and such that the question distribution $\pi$ is uniform on $\{0,1\}^n \times \{0,1\}^n$ and the referee predicate is given by $R_n$. 
+
+ We let $\TIME_V(n)$ be the worst-case running time of $R_n$ over all inputs $(x,y,a,b)$. If $\TIME_V(n) \leq (\lambda n)^\lambda$ for some integer $\lambda \geq 1$ and all $n\geq 1$ then we say that $V$ is \emph{$\lambda$-bounded}. 
+\end{definition}
+
+Note that in the definition we fixed the question distribution used for the game $G_n$ to the uniform distribution. At this stage this is mostly for convenience. Later we will realize that this is too restrictive, and so one should bear in mind that the definition can be generalized to allow various classes of distributions, where the key point is that the distribution should be fixed and independent of $V$. 
+
+We need one last definition.
+
+\begin{definition}
+For a nonlocal game $\mG$ and a probability $p\in[0,1]$ let $\mE(\mG,p)$ denote the smallest integer $d\geq 1$ such that there exists a strategy $(\ket{\psi},\{A^x_a\},\{B^y_b\})$ for the players in $\mG$ that has success probability at least $p$ and such that $\ket{\psi} \in \C^d \otimes \C^d$. If no such strategy exists, then $\mE(\mG,p) = \infty$. 
+\end{definition}
+
+For example, for the Magic Square game it is possible to show that $\mE(\mG,1)=4$ (two qubits per player), and in fact there is a $c<1$ such that $\mE(\mG,p)=4$ for all $p\in[c,1]$. For a game that has a perfect classical strategy we have $\mE(\mG,p)=1$ for all $p\in[0,1]$. 
+
+Let's make the following specification for a compression procedure. 
+
+\begin{claim}\label{claim:compression}
+There is a polynomial-time computable mapping $\compr$ that takes as input a Turing machine description $\ol{V}$ and an integer $\lambda$ written in unary and returns a Turing machine description $\ol{V^\compr} = \compr(\ol{V},\lambda)$ such that the following conditions hold: 
+\begin{itemize}
+\item[(a)] $V^\compr$ is always a normal form verifier such that $\TIME_{V^\compr}(n) \leq p_\compr(\lambda + n)$, for some universal polynomial $p_\compr$ independent of $V$.
+\item[(b)] If $V$ is a normal form $\lambda$-bounded verifier then for every $n\geq 1$ letting $N=2^n$ the following hold:
+\begin{itemize}
+\item[(b.i)] If $\omega^*(R_N)=1$ then $\omega^*(R^\compr_n)=1$. 
+\item[(b.ii)] $\mE(G^\compr_n,\frac{1}{2}) \geq \max\big\{\mE(G_N,\;\frac{1}{2}),N\big\}\;.$
+\end{itemize}
+\end{itemize}
+\end{claim}
+
+The key point about Claim~\ref{claim:compression} is that the running time of $R_n^\compr$ can be much smaller than that of $R_N$, yet it preserves essential properties of it, stated in (b.i) and (b.ii). 
+
+We make a few comments on the requirements stated in the claim. First of all, even though eventually we only need to create a \emph{computable} mapping $\mF$ from Turing Machines to games, it will be important that here $\compr$ is required to run in polynomial time. Second, it will also be essential that for any input $(\ol{V},\lambda)$ to $\compr$ the output $\ol{V^\compr}$ is the description of a time-bounded verifier. Note that this is not hard to enforce in practice by hard-coding some kind of time-out mechanism in the definition of $V^\compr$. Finally, observe that condition (b.ii) states something a little stronger (strictly speaking, incomparable) than the ``soundness preservation'' condition we considered in Section~\ref{sec:cartoon}. Indeed the fact that we are able to make a statement about entanglement will play an important role in the final argument. (On the other hand, that the conditions apply to $N=2^n$ as opposed to e.g.\ $N=n+1$ is not important; since it is what comes out of the proof we keep it here---what matters is that $V_n^\compr$ reproduces properties of $V_N$ for some $N>n$ while having complexity comparable to $V_n$, not $V_N$.) Finally, note that due to condition (b) running $\compr$ on a trivial input that always accepts already yields an interesting family of games: due to (b.i) we will have $\omega^*(V^\compr_n)=1$ for all $n$, and due to (b.ii) achieving any value larger than $\frac{1}{2}$ will necessarily require a quantum state of local dimension at least $N=2^n$. 
+
+These observations show that designing a procedure $\compr$ that fulfills all conditions will likely not be an easy task. Nevertheless, let's put that task aside for the time being and see how the desired reduction can be completed assuming the validity of Claim~\ref{claim:compression}.
+
+\subsection{A self-referential verifier}
+\label{sec:self-ref}
+
+Fix a Turing Machine $M$ and an integer $\lambda \geq 1$ and consider the following normal form verifier $V=V_{M,\lambda}$, that implicitly depends on $M$ and $\lambda$ (and in fact is efficiently computable from the pair $(\ol{M},\lambda)$). For any $n\geq 1$, we describe the decision procedure $R_n$ using high-level ``pseudocode''. Given $(x,y,a,b) \in \{0,1\}^{4n}$, $R_n$ does the following:
+\begin{enumerate}
+\item $R_n$ simulates $M$ on the empty tape for $n$ steps. If $M$ halts then $R_n$ accepts (i.e.\ it returns the value `$1$', irrespective of its inputs $(x,y,a,b)$. Otherwise, if $M$ has not halted in $n$ steps then $R_n$ proceeds to the next item.
+\item $R_n$ computes $\ol{V^\compr} = \compr(\ol{V},\lambda)$.
+\item $R_n$ returns the decision $(R^\compr)_n(x,y,a,b) \in \{0,1\}$. 
+\end{enumerate}
+Note that in giving this high-level description of a Turing Machine $V$, that on input $1^n$ returns the description $\ol{R_n}$, we have referred to the description $\ol{V}$ itself. That this is possible, i.e.\ $V$ is a well-defined Turing Machine, is a consequence of Kleene's recursion theorem---this is similar to the self-referential call we made for the definition of algorithm $B$ in the proof of Lemma~\ref{lem:halt}. 
+
+The following three claims establish the key properties of this construction. 
+
+\begin{claim}\label{claim:lambda-bound}
+For any Turing Machine $M$ there is an integer $\lambda \geq 1$ which is computable from $|M|$ and such that $V$ is $\lambda$-bounded.
+\end{claim}
+
+\begin{proof}
+By definition $V$ on input $1^n$ returns a decision procedure $R_n$ that takes four inputs of length $n$ each, so it is a normal form verifier. It remains to estimate its running time. First we estimate $|\ol{V}|$. Clearly, the actions to be performed in each of the three steps can be described using $\poly(|\ol{M}|,\lambda)$ bits. Note that the description $\ol{\compr}$ does not depend on anything, so its size is a constant. 
+
+Next we estimate the running time of $R_n$. 
+The first step, the simulation of $M$ for $n$ steps, takes time $p_1(n, \ol{M})$ for some universal polynomial $p_1$. The second step, the computation of $\ol{V^\compr}$, takes time $p_2(\ol{V},\lambda)$, for some universal polynomial $p_2$ that bounds the running time of $\compr$. The last step, the evaluation of $R_n^\compr(x,y,a,b)$, takes time $p_\compr(\lambda+n)$ by property (a) in Claim~\ref{claim:compression}.
+
+Overall the running time is $\poly(n,\ol{M},\lambda)$ for some universal polynomial. This can be bounded above by the expression $(\lambda n)^\lambda$ for all $n\geq 1$ provided $\lambda$ is large enough compared to $\ol{M}$. 
+\end{proof}
+
+For the remaining two claims we fix $\lambda$ to the value promised in Claim~\ref{claim:lambda-bound} and let $\{R_n\}$ and $\{G_n\}$ be the family of decision procedures and games respectively implied by the verifier $V$ specified from $M$ and $\lambda$. 
+
+\begin{claim}\label{claim:m-halt-1}
+Suppose that $M$ halts on an empty input tape. Then $\omega^*(R_n) = 1$ for all $n$. 
+\end{claim}
+
+\begin{proof}
+Let $T$ be the number of steps taken by $M$ to halt. Then for all $n\geq T$ the decision procedure $R_n$ always accepts its inputs at step 1. Therefore $\omega^*(R_n)=1$ for all $n\geq T$. Now we show by (strong) downwards induction from $m=T$ to $1$ that $\omega^*(R_m)=1$. We showed the induction hypothesis for $m=T$ already. Suppose it true up to some value $m>1$. Then since $M$ does not halt in $(m-1)$ steps, the decision procedure $R_{m-1}$ proceeds to step 2.\ and executes $(R^\compr)_{m-1}$. Since $2^{m-1} > m-1$, it follows from the induction hypothesis that $\omega^*(R_{2^{m-1}})=1$. Using property (b.i) in Claim~\ref{claim:compression} we have that $\omega^*(R_{{m-1}})=1$, as desired. 
+\end{proof}
+
+\begin{claim}\label{claim:m-halt-2}
+Suppose that $M$ does not halt. Then $\omega^*(R_n)\leq \frac{1}{2}$ for all $n\geq 1$. 
+\end{claim}
+
+\begin{proof}
+We show that $\mE(G_n,\frac{1}{2})=\infty$ for all $n\geq 1$. This shows that no finite strategy can achieve a success probability larger than $\frac{1}{2}$, and taking the limit that $\omega^*(R_n)\leq \frac{1}{2}$, as desired. Since $M$ does not halt, for any $n$, $R_n$ proceeds to step 2. and returns the desision of $R^\compr_N$ where $N=2^n$. By property (b.ii) in Claim~\ref{claim:compression} it follows that for all $n\geq 1$,
+\[ \mE(G_n,\frac{1}{2}) \geq \max\Big\{\mE\big(G_N,\;\frac{1}{2}\big),N\Big\}\;.\]
+By straightforward induction, $\mE(G_n,\frac{1}{2}) \geq T$ for any integer $T$, so it must be $\infty$. 
+\end{proof}
+
+
+\subsection{A game for the halting problem}
+
+We now describe the reduction $\mF$. On input $\ol{M}$, $\mF$ first computes the integer $\lambda$ whose existence is promised in Claim~\ref{claim:lambda-bound}. Then $\mF$ computes a description of the decision procedure $R_1$ from the start of Section~\ref{sec:self-ref}, based on $\ol{M}$ and $\lambda$. Finally, $\mF$ returns a description of the associated game $G=G_1$.\footnote{It is interesting that ultimately we only need $G_1$, but to arrive at constructing it we had to consider infinite families of games.} 
+
+Suppose first that $M$ halts. Then by Claim~\ref{claim:m-halt-1} it holds that  $\omega^*(G)=1$. Suppose now that $M$ does not halt. It follows from Claim~\ref{claim:m-halt-2} that $\omega^*(G)\leq \frac{1}{2}$. 
+This completes the reduction.\footnote{While we promised to obtain a separation between values $\frac{2}{3}$ and $\frac{1}{3}$, we only obtained one between $1$ and $\frac{1}{2}$. There is nothing in the line of argument that is special about $\frac{1}{2}$ and we could have done the same replacing it by $\frac{1}{3}$, giving us an even stronger reduction than desired. In general, the values $\frac{2}{3}$ and $\frac{1}{3}$ can be amplified towards $1$ and $0$ respectively by applying techniques from parallel repetition; see e.g.~\cite{yuen2016parallel}.}
+
+\begin{remark}
+It is worth pausing to appreciate the significance of this reduction. Beyond the stated inclusion of complexity classes, it makes quite a striking statement about the complexity that may lurk behind simple, finite, observable phenomena in quantum mechanics. What the existence of $\mF$ states is that for \emph{any} problem that can be encoded in the halting of a Turing machine there is a game, that moreover is easily computable from the Turing machine, that ``witnesses'' this fact. Consider for example the Riemann Hypothesis (RH). There is a simple Turing Machine $M$ that halts if and only if RH is provable in ZFC (Zermelo-Fraenkel set theory with the axiom of choice included). Indeed $M$ simply enumerates over all possible proofs in ZFC and checks if they are (i) valid proofs and (ii) prove RH. Moreover, the Turing machine $M$ is large, but not absurdly so; probably a few millions of characters are more than enough. This means that we can, in principle but also in practice, write a simple computer program that will return the rules for a moderately-sized nonlocal game $\mG=\mG_{RH}$ such that $\omega^*(\mG)=1$ if and only if RH is provable in ZFC. Isn't this amazing?
+\end{remark}
+
+\begin{remark}
+A natural question is what is the \emph{commuting value} $\omega_{com}$ of the games $\mG=\mG_{M,\lambda}$. Naturally this value is always at least $\omega^*(M)$, and moreover for \emph{some} infinite family of $M$ it must be the case that $\omega_{com}(\mG)=1$ even if $M$ does not halt (and hence $\omega^*(\mG) \leq \frac{1}{2}$), as otherwise using algorithm $C$ from the previous lecture we would be able to solve the Halting problem. We do not know if $\omega_{com}(\mG)=1$ for all games $\mG$ in the range of the reduction $\mF$. 
+\end{remark}

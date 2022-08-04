@@ -1,0 +1,38 @@
+\chapter{}
+
+
+\begin{exercise}\label{ex:ms-opsol}
+Let $Y_1,\ldots,Y_9$ be an operator solution to the Magic Square system. Show that there is an orthonormal basis with respect to which 
+\[ \begin{matrix} Y_1 = (I_2 \otimes \sigma_Z)\otimes \Id & Y_2 = (\sigma_Z\otimes I_2)\otimes \Id & Y_3=(\sigma_Z\otimes \sigma_Z)\otimes \Id \\
+Y_3 = (\sigma_X\otimes I_2)\otimes \Id & Y_4 = (I_2\otimes \sigma_X)\otimes \Id & Y_5 = (\sigma_X\otimes \sigma_X)\otimes \Id \\ Y_7 = (\sigma_X\otimes \sigma_Z)\otimes \Id & Y_8=(\sigma_Z\otimes \sigma_X)\otimes \Id & Y_9 = (\sigma_Y\otimes \sigma_Y)\otimes \Id \end{matrix}\;,\]
+where $I_2$ denotes the identity on $\C^2$ and $\Id$ is the identity on $\C^d$ for some $d$.
+\end{exercise}
+
+\begin{exercise}
+Show that the conclusion of Lemma~\ref{lem:epr-stable} holds under the following weaker assumption: $\ket{\psi}_{\reg{ABE}} \in (\C^2)_\reg{A}^{\otimes n} \otimes \mH_\reg{B}^{\otimes n} \otimes \mH_\reg{E}$ with $\mH_\reg{B}$ arbitrary, and for every $i\in \{1,\ldots, n\}$,
+\[\big(\sigma_{X,i}\big)_\reg{A} \otimes \big(X_i\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\, \big(\sigma_{Z,i}\big)_\reg{A} \otimes \big(Z_i\big)_\reg{B} \ket{\psi}_{\reg{ABE}} \,=\,\ket{\psi}_\reg{ABE}\;,\]
+with $X_i$ and $Z_i$ arbitrary binary observables on $\mH_\reg{B}$. \emph{[Hint: Make a careful use of Claim~\ref{claim:ab-state}]}
+\end{exercise}
+
+\begin{exercise}
+A game is called \emph{symmetric} if $\mX=\mY$ and $\mA=\mB$, the distribution on questions $\pi$ is invariant under permutation of the two questions, $\pi(x,y)=\pi(y,x)$ for all $(x,y)$, and the verification predicate is symmetric as well, i.e.\ $V(x,y,a,b)=V(y,x,b,a)$ for all $(x,y,a,b)$. Define a strategy $(\ket{\psi},\{A_{xa}\},\{B_{yb}\})$ to be \emph{symmetric} if $\mH_\reg{A}=\mH_\reg{B}$, $\ket{\psi}$ is invariant under exchange of the two subsystems, and $A_{xa} = B_{xa}$ for all $x,a$. 
+
+Show that whenever a game $\mG$ is symmetric then for any strategy $(\ket{\psi},\{A_{xa}\},\{B_{yb}\})$ that succeeds with some probability $p$ in the game there is a symmetric strategy $(\ket{\tilde{\psi}},\{\tilde{A}_{xa}\})$ that succeeds with the same probability. 
+\end{exercise}
+
+\begin{exercise}
+The \emph{BLR linearity game} is a nonlocal game which can be described as follows: 
+\begin{itemize}
+\item The referee selects $a,a'\in\Z_2^n$ uniformly at random. She sends $(a,a')$ to one player and $a$, $a'$, or $a+a'$ to the other player. 
+\item The first player replies with two bits $e_1,e_2\in\{\pm 1\}$, and the second with a single bit $f\in\{\pm 1\}$. The referee accepts if and only if the player's answers satisfy the natural relation, e.g.\ if the third player received $a+a'$ then it should be that $f=e_1e_2$. 
+\end{itemize}
+\begin{enumerate}
+\item A classical deterministic strategy in the game can be modeled in the obvious way by three functions $f_{A,1},f_{A,2} : (\Z_2^n)^2 \to \{\pm 1\}$, representing Alice's two answer bits, and $f_B:\Z_2^n \to \{\pm 1\}$, representing Bob's single answer bit. Show that if $(f_{A,1},f_{A,2},f_B)$ succeeds with probability $1-\eps$ in the game then 
+\[ \Es{a,a'\in \Z_2^n} \;\big[ f_B(a)f_B(a')f_B(a+a')\big] \,\geq\, 1-O(\eps)\;.\]
+\item  Using the Fourier expansion $f_B(a)=\sum_{S\subseteq\{1,\ldots,n\}} \widehat{f_B}(S) \chi_S(a)$, where $\chi_S(a)=\prod_{i\in S} a_i$, deduce from the previous question that for any near-optimal strategy $f_B$ must have one ``large'' (to be quantified as a function of $\eps$ in your answer) Fourier coefficient. 
+\item Conclude that successful strategies in the BLR linearity game must be close to ``linear.''
+\item Extend the previous reasoning to quantum strategies. In particular, give a clear formulation for the statement that the BLR linearity game, as described above, is ``sound against quantum strategies.'' \emph{[Hint: you may find it easier to first only consider strategies that use a maximally entangled state, i.e. $\mH_A = \mH_B = \C^d$ and $\ket{\psi} = \ket{\phi_d}$. For this case, extend the previous proof to ``matrix-valued'' functions defined from the strategy and use Fourier analysis directly at the matrix level. What is the quantum analogue of having a large Fourier coefficient? The general case is similar, but a little more technical]}
+\end{enumerate}
+
+\end{exercise}
+
