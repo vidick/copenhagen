@@ -8,21 +8,21 @@ Interestingly, many nonlocal games have the property that the optimal quantum st
 
 %\section{Rigidity for quantum games}
 
-Let's look back at the proof of Theorem~\ref{thm:tsirelson}. If we try to make all inequalities tight, then we don't have much choice. First of all, for the third line we need to have $\vec{u}_0 = \frac{\vec{v}_0+\vec{v}_1}{\|\vec{v}_0+\vec{v}_1\|}$ and $\vec{u}_1 = \frac{\vec{v}_0-\vec{v}_1}{\|\vec{v}_0-v\vec{v}_1\|}$. So the only freedom is in choosing $\vec{v}_0$ and $\vec{v}_1$. But then to have equality in the application of the Cauchy-Schwarz inequality in the fourth line we need $\|\vec{v}_0+\vec{v}_1\|=\|\vec{v}_0-\vec{v}_1\|$ which, using that $\vec{v}_0$ and $\vec{v}_1$ are both unit vectors, requires $\vec{v}_0 \cdot \vec{v}_1 = 0$. Conversely, you can check that any two unit vectors $\vec{v}_0$ and $\vec{v}_1$ that are orthogonal will achieve the optimum (provided $\vec{u}_0,\vec{u}_1$ are defined from $\vec{v}_0,\vec{v}_1$ as indicated above). So the only freedom we have is which orthonormal pair to choose for $\vec{v}_0,\vec{v}_1$. However, note that any two orthonormal pairs are related by an orthogonal transformation, and the value of SDP($\mG$) is invariant under any orthogonal rotation of the $v_j$, provided the $\vec{u}_i$ are rotated in the inverse direction. So this last degree of freedom is unavoidable, and we have completely characterized the set of optimal vector solutions. 
+Let's look back at the computation of $\text{SDP}(\mG_{CHSH})$ in the proof of Theorem~\ref{thm:tsirelson}. If we try to make all inequalities tight, then we don't have much choice. For simplicity, restrict the supremum to real vectors.  First of all, for the third line we need to have $\vec{u}_0 = \frac{\vec{v}_0+\vec{v}_1}{\|\vec{v}_0+\vec{v}_1\|}$ and $\vec{u}_1 = \frac{\vec{v}_0-\vec{v}_1}{\|\vec{v}_0-v\vec{v}_1\|}$. So the only freedom is in choosing $\vec{v}_0$ and $\vec{v}_1$. But then to have equality in the application of the Cauchy-Schwarz inequality in the fourth line we need $\|\vec{v}_0+\vec{v}_1\|=\|\vec{v}_0-\vec{v}_1\|$, which requires $\vec{v}_0 \cdot \vec{v}_1 = 0$. Conversely, you can check that any two unit vectors $\vec{v}_0$ and $\vec{v}_1$ that are orthogonal will achieve the optimum (provided $\vec{u}_0,\vec{u}_1$ are defined from $\vec{v}_0,\vec{v}_1$ as indicated above). So the only freedom we have is which orthonormal pair to choose for $\vec{v}_0,\vec{v}_1$. However, note that any two orthonormal pairs are related by an orthogonal transformation, and the value of SDP($\mG$) is invariant under any orthogonal rotation of the $v_j$, provided the $\vec{u}_i$ are rotated in the inverse direction. So this last degree of freedom is unavoidable, and we have completely characterized the set of optimal vector solutions. 
 
 \begin{exercise}
-Suppose $\vec{u}_0,\vec{u}_1,\vec{v}_0,\vec{v}_1$ are unit vectors that achieve a value of $\frac{\sqrt{2}}{2}-\eps$, for some small $\eps>0$, in SDP($\mG_{\CHSH}$). Is the pair $(\vec{v}_0,\vec{v}_1)$ necessarily close to an orthonormal pair? If so, how would you measure distance to an orthonormal pair?  
+Suppose $\vec{u}_0,\vec{u}_1,\vec{v}_0,\vec{v}_1$ are real unit vectors that achieve a value of $\frac{\sqrt{2}}{2}-\eps$, for some small $\eps>0$, in SDP($\mG_{\CHSH}$). Is the pair $(\vec{v}_0,\vec{v}_1)$ necessarily close to an orthonormal pair? If so, how would you measure distance to an orthonormal pair?  
 \end{exercise}
 
-The exercise above asks you to suggest a formulation of ``rigidity'' of the CHSH game at the level of vectors. Our goal in this lecture is to develop the tools for making similar statements directly at the level of the quantum strategy, i.e.\ the players' observables and shared quantum state. A result of our investigations will be a theorem stating that the quantum strategy for the CHSH game introduced in Example~\ref{ex:chsh-qbias} is  unique up to local rotations. But we'll go much further than the CHSH game and develop techniques that can be used to show rigidity statements for large classes of games, including all BLS games. 
+The preceding exercise asks you to suggest a formulation of ``rigidity'' of the CHSH game at the level of vectors. Our goal in this lecture is to develop the tools for making similar statements directly at the level of the quantum strategy, i.e.\ the players' observables and shared quantum state. A result of our investigations will be a theorem stating that the quantum strategy for the CHSH game introduced in Example~\ref{ex:chsh-qbias} is  unique up to local rotations. But we'll go much further than the CHSH game and develop techniques that can be used to show rigidity statements for large classes of games, including all BLS games. 
 
 
 \section{Approximate group representations}
 \label{sec:approx-group}
 
 We first make a little detour through the theory of group representations. For $d$-dimensional matrices  $A,B$ and $\sigma$ such that $\sigma$ is positive semidefinite, write 
-$$\langle A,B\rangle_\sigma = \mathrm{Tr}(AB^* \sigma)\;,$$
-where we use $B^*$ to denote the conjugate-transpose. This is an extension of our earlier notation for the matrix inner product, which is recovered for $\sigma = \Id$. If $\sigma$ is the totally mixed state, then we obtain a dimension-normalized variant of the trace inner product. We will also write $\|A\|_\sigma = \langle A,A\rangle_\sigma^{1/2}$. This is a semi-norm, and it is a norm if $\sigma$ is invertible. 
+$$\langle A,B\rangle_\sigma = \mathrm{Tr}(A^* B \sigma)\;,$$
+where we use $B^*$ to denote the conjugate-transpose. This is an extension of our earlier notation for the matrix inner product, which is recovered for $\sigma = \Id$. If $\sigma$ is the totally mixed state, then we obtain a dimension-normalized variant of the trace inner product. We will also write $\|A\|_\sigma = \langle A,A\rangle_\sigma^{1/2}$. This is a semi-norm, and it is a norm if $\sigma$ is invertible. Note that if $\ket{\psi\in \C^d \otimes \C^d$ is any state whose reduced density on the first system equals $\sigma$, then $\|A\|_\sigma = \| (A\otimes I) \ket{\psi}\|$
 
 Given an arbitrary finite group $G$ (not necessarily abelian), a group representation of $G$ is a map $f:G \to U_d(\C)$, the group of $d\times d$ unitary matrices, such that $f$ is a homomorphism: for any $x,y\in G$, $f(x^{-1}y)=f(x)^* f(y)$, where we used $^*$ to denote the conjugate transpose (which, for unitary matrices, corresponds to taking the inverse). The following definition introduces a notion of \emph{approximate} group representation.  
 
@@ -42,22 +42,22 @@ Because $\Tr(\sigma)=1$ and $f$ is valued in the unitary matrices,~\eqref{eq:gh-
 \begin{remark}
 The condition \eqref{eq:gh-condition} in the definition is closely related to the Gowers $U^2$ norm
 $$\|f\|_{U^2}^4 \,=\, \Es{xy^{-1}=zw^{-1}}\, \big\langle f(x)f(y)^* ,f(z)f(w)^* \big\rangle_\sigma.$$
-While a large Gowers norm implies closeness to an affine function, we are interested in testing homomorphisms, and the condition \eqref{eq:gh-condition} will arise naturally from our calculations in the next section. 
+While a large Gowers norm implies closeness to an affine function, we are interested in testing homomorphisms. The condition \eqref{eq:gh-condition} will arise naturally from our calculations in the next section. 
 \end{remark}
 
 \section{The Gowers-Hatami theorem}
 
-There are many possible notions for approximate group representation. The most often considered one replaces the norm in~\eqref{eq:gh-condition-norm} by the operator norm. A disadvantage of that variant is that in general approximate representations are not always close to exact representations, even for very simple groups, e.g.\ $G=\Z_2$. In contrast, 
-Gowers and Hatami~\cite{gowers2015inverse} showed that in the case of Definition~\ref{def:approx-rep}, approximate group representations can always be ``rounded'' to a nearby exact representations. We state and prove a slightly more general, but quantitatively weaker, variant of their result.
+There are many possible notions for approximate group representation. The most often considered one replaces the norm in~\eqref{eq:gh-condition-norm} by the operator norm. A famous theorem of Kazhdan~\cite{kazhdan1982e} shows that all amenable groups are stable for the operator norm, i.e.\ any approximate representation for that norm is proportionately close to an exact representation. Here we are interested in a norm that generalizes the (dimension-normalized) Frobenius norm. In particular, this norm is not sub-multiplicative and hence Kazhdan's proof does not apply. Nevertheless, 
+Gowers and Hatami~\cite{gowers2015inverse} showed that also in the case of Definition~\ref{def:approx-rep} an approximate group representation can always be ``rounded'' to a nearby exact representations. We state and prove a slightly more general (but quantitatively weaker) variant of their result.
 
 \begin{theorem}[Gowers-Hatami]\label{thm:gh}
 Let $G$ be a finite group, $\eps\geq 0$, and $f:G\to U_d(\C)$ an $(\eps,\sigma)$-representation of $G$. Then there exists a $d'\geq d$, an isometry $V:\C^d\to \C^{d'}$, and a representation $g:G\to U_{d'}(\C)$ such that 
 $$\Es{x\in G}\, \big\| f(x) - V^*g(x)V \big\|_\sigma^2\, \leq\, 2\,\eps.$$ 
 \end{theorem}
 
-Gowers and Hatami limit themselves to the case of $\sigma = d^{-1}I_d$, which corresponds to the dimension-normalized Frobenius norm. In this scenario they in addition obtain a tight control of the dimension $d'$, and show that one can always take $d'\ = (1+O(\eps))d$ in the theorem. We will see a much shorter proof than theirs (the proof is implicit in their argument) that does not seem to allow to recover this estimate. 
+Gowers and Hatami limit themselves to the case of $\sigma = d^{-1}I_d$, which corresponds to the dimension-normalized Frobenius norm. In this scenario they in addition obtain a tight control of the dimension $d'$, and show that one can always take $d'\ = (1+O(\eps))d$ in the theorem. We will see a much shorter proof than theirs (our proof is inspired from the mroe general argument in~\cite{de2017operator}) that does not seem to allow to recover this estimate. 
 
-Note that  Theorem \ref{thm:gh} does not in general hold  with $d'=d$. The reason is that it is possible for $G$ to have an approximate representation in some dimension $d$, but no exact representation of the same dimension: to obtain an example of this, take any group $G$ that has all non-trivial irreducible representations of large enough dimension, and create an approximate representation in e.g. dimension one less by ``cutting off'' one row and column from an exact representation. The averaging over all dimensions induced by the matrix $\sigma$ used to weigh the norm $\|\cdot\|_\sigma$ will in general barely notice this, but it will be impossible to ``round'' the approximate representation obtained to an exact one without modifying the dimension. 
+Note that  Theorem \ref{thm:gh} does not in general hold  with $d'=d$. The reason is that it is possible for $G$ to have an approximate representation in some dimension $d$, but no exact representation of the same dimension: to obtain an example of this, take any group $G$ that has all non-trivial irreducible representations of large enough dimension, and create an approximate representation in e.g.\ dimension one less by ``cutting off'' one row and column from an exact representation. The averaging over all dimensions induced by the matrix $\sigma$ used to weigh the norm $\|\cdot\|_\sigma$ will in general barely notice this, but it will be impossible to ``round'' the approximate representation obtained to an exact one without modifying the dimension. 
 
 \begin{exercise}\label{ex:gh-pauli}
 Prove Theorem~\ref{thm:gh} for the case where $G$ is the single-qubit Weyl-Heisenberg group, which is the $8$-element matrix group $\mP$ generated by the Pauli $\sigma_X$ and $\sigma_Z$ matrices. \emph{[Hint: Consider $V:\C^d \to \C^{d'} \otimes \C^2$, where $\C^{d'} \simeq \C^d \otimes \C^2 $, defined by 
@@ -109,7 +109,7 @@ This relates correlation of $f$ with $V^*gV$ to the quality of $f$ as an approxi
 
 \section{Rigidity for the CHSH game}
 
-Now let's see what this all has to do with the CHSH game. We will use the theory of approximate group representations to prove the following theorem, originally due to~\cite{summers1988maximal} (with slightly weaker bounds; see also~\cite{mckague2012robust} for the $O(\sqrt{\eps})$ dependence).
+Now let's see what this all has to do with the CHSH game. We will use our newfound theory of approximate group representations to prove the following theorem, originally due to~\cite{summers1988maximal} (with slightly weaker bounds; see also~\cite{mckague2012robust} for the $O(\sqrt{\eps})$ dependence).
 
 \begin{theorem}\label{thm:rigid-chsh}
 Let $\eps>0$, and suppose that a strategy for the players  in the CHSH game, using  a bipartite state $\ket{\psi}\in\C^d\otimes \C^d$ and observables $A_0,A_1$ for Alice and $B_0,B_1$ for Bob, achieves a bias at least $\sqrt{2}/2-\eps$ in the game. Then there are local isometries $V_A,V_B:\C^d \to \C^2 \otimes \C^{d'}$ such that 
@@ -125,7 +125,7 @@ and a similar relation holds with $A_0$ replaced by $A_1$ and $\sigma_X$ replace
 
 It is important to note what the theorem says, and what it does not say. It does not say that the state $\ket{\psi}$ shared by the players must be close to an EPR pair --- it says that, \emph{up to local rotations}, the state must be close to an EPR pair \emph{tensored with an ancilla state}. Since local unitaries have no effect on the Schmidt coefficients, it does imply that the original state shared by the players have Schmidt coefficients that can be split into two roughly even batches --- and in particular, that there are at least two of them. 
 
- The theorem also does not say anything about the observables $A_0$, $A_1$ themselves. Eq.~\eqref{eq:chsh-alice} only talks about the action of the observable \emph{on the state}. This is inevitable, as the game only ``observes'' this action. In particular, it is perfectly possible for $A_0$ to look like something completely arbitrary in a portion of space in which the reduced density of $\ket{\psi}$ on Alice's space is zero, or very small. But the theorem does say that, in terms of ``observable consequences'' only, the action of $A_0$ on $\ket{\psi}$ is comparable to the action of $\sigma_X$ on one half of an EPR pair. Although this may sound relatively weak, we will later see that this fact is extremely useful in applications. 
+ The theorem also does not say anything about the observables $A_0$, $A_1$ themselves. Eq.~\eqref{eq:chsh-alice} only talks about the action of the observable \emph{on the state}. This is inevitable, as the game only ``observes'' this action. In particular, it is perfectly possible for $A_0$ to look like something completely arbitrary in a portion of space in which the reduced density of $\ket{\psi}$ on Alice's space is zero, or very small. But the theorem does say that, in terms of ``observable consequences'' only, the action of $A_0$ on $\ket{\psi}$ is comparable to the action of $\sigma_X$ on one half of an EPR pair. Although this may sound relatively weak, we will later see that this fact can be extremely useful in applications. 
 
 
 \begin{proof}
@@ -206,7 +206,7 @@ The following lemma is immediate from the proof of Lemma~\ref{lem:bcs-tensor} an
 
 \begin{lemma}\label{lem:ms-perfect}
 Suppose that a quantum tensor correlation
-\[ p(a,b|x,y)\,=\, \bra{\psi} A^x_a \otimes B^y_b\ket{\psi}\]
+\[ p(a,b|x,y)\,=\, \bra{\psi} A_{x,a} \otimes B_{y,b}\ket{\psi}\]
   perfectly satisfies the referee's tests in the Magic Square game. Let $S_B$ denote the support of the reduced density $\rho_\reg{B}$ of $\ket{\psi}\in\mH_\reg{A}\otimes \mH_\reg{B}$ on $\mH_\reg{B}$.  Then the observables $B_1,\ldots,B_9$ stabilize $S_B$, and their restriction to that space form an operator solution to the Magic Square.
 \end{lemma}
 

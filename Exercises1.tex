@@ -30,6 +30,14 @@ Say that a game is \emph{nontrivial} if all pairs of questions with $\pi(x,y)>0$
 Prove Naimark's dilation theorem. State and prove a version of the theorem that simultaneously ``dilates'' multiple POVM $\{A_{xa}\}_{a\in\mA}$ acting on the same Hilbert space $\mH$.
 \end{exercise}
 
+\begin{exercise}[Odd cycle game]
+Let $n$ be an odd integer. In the odd cycle game of order $n$, we take $\mX=\mY=\Z_n$ and $\mA=\mB=\{-1,1\}$. The distribution $\pi$ is uniform on $\{(i,j)\in \Z_n\times \Z_n : i\in\{t-1,t\}\}$. The game predicate is $V(i,j,a,b)=1$ if $j=i+1$ and $ab=-1$ or $j=i$ and $ab=1$. 
+\begin{enumerate}
+\item Verify that this is an XOR game and compute its classical value. 
+\item Design a quantum strategy that uses a single EPR pair and succeeds with probability $\cos^2(\pi/4n)$. 
+\item (Harder:) Show that this is optimal.
+\end{enumerate}
+\end{exercise}
 
 \section{Tirelson's bound, and theorem}
 
