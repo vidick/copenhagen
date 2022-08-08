@@ -4,9 +4,11 @@
 \section{Warm-up}
 
 \begin{exercise}
-For $\mX=\mY=\mA=\mB=\{0,1\}$, give an example of a strategy that is non-signaling but is not classical. 
+\begin{enumerate}
+\item Show that any non-signaling strategy that is also deterministic is classical.
+\item For $\mX=\mY=\mA=\mB=\{0,1\}$, give an example of a strategy that is non-signaling but is not classical. 
+\end{enumerate}
 \end{exercise}
-
 
 \begin{exercise}
 \begin{enumerate}
@@ -23,6 +25,11 @@ What is the smallest possible size for the question and answer sets in a game wh
 \begin{exercise}
 Say that a game is \emph{nontrivial} if all pairs of questions with $\pi(x,y)>0$ have at least one accepting answer to them. For a nontrivial XOR game $\mG$, show that the non-signaling bias satisfies $\beta^{ns}(\mG)=1$.
 \end{exercise}
+
+\begin{exercise}
+Prove Naimark's dilation theorem. State and prove a version of the theorem that simultaneously ``dilates'' multiple POVM $\{A_{xa}\}_{a\in\mA}$ acting on the same Hilbert space $\mH$.
+\end{exercise}
+
 
 \section{Tirelson's bound, and theorem}
 
@@ -49,9 +56,9 @@ Grothendieck's inequality states that there exists a universal constant $K_G^\R\
 \[\sup_{\substack{d,\;\vec{u}_i,\vec{v}_j\in \C^{d}\\ \|\vec{u}_i\|,\|\vec{v}_j\|\leq 1}} \Big|\sum_{i,j} \; M_{ij}\, \vec{u}_i\cdot \vec{v}_j \Big|\,\leq\, K_G\, \max_{x_i,y_j\in [-1,1]} \Big|\sum_{i,j} \; M{ij}\, x_i y_j \Big|\;.\]
 The constant $K_G^\R$ is known to satisfy $K_G^\R \leq 1.782\ldots$.
 Furthermore, if $M=(M_{ij})\in \C^{n\times n}$ and supremum on the right-hand side is taken over all complex $x_i,y_j\in \C$ such that $|x_i|,|y_j|\leq 1$ then the inequality holds with an improved constant $K_G^\C < K_G^\R$ such that $K_G^\C \leq 1.405\ldots$.
-\begin{enumerate}
+\begin{itemize}
 \item What is the best constant $K$ such that $\beta^*(\mG) \leq K \beta(\mG)$, for any XOR game $\mG$?
-\end{enumerate}
+\end{itemize}
 \end{exercise}
 
 
@@ -109,7 +116,7 @@ s.t. \quad&  \begin{pmatrix} \text{Diag}(u) & -G \\ -G^\dagger & \text{Diag}(v) 
 \item[5.] For the special case of $\mG = \mG_\CHSH$, exhibit a dual solution that certifies $\beta^*(\mG_\CHSH)\leq \cos^2\pi/8$, thus providing a third proof of Tsirelson's bound. 
 \end{enumerate}
 Before analyzing the parallel repetition of two XOR games, it is convenient to study their ``XOR repetition''. The XOR of two XOR games $\mG_1$ and $\mG_2$ is the XOR game $\mG = \mG_1\oplus \mG_2$ with $\mX=\mX_1\times \mX_2$, $\mY=\mY_1\times \mY_2$, and if $G^{(1)}$ and $G^{(2)}$ are the game matrices of $\mG_1$ and $\mG_2$ respectively then the game matric of $\mG$ is  
-\[ G_{(x_1,y_1),(x_2,y_2)} \,=\, G^{(1)}_{(x_1,y_1)} G^{(2)}_{x_2,y_2}\;.\]
+\[ G_{(x_1,y_1),(x_2,y_2)} \,=\, G^{(1)}_{x_1,y_1} G^{(2)}_{x_2,y_2}\;.\]
 In other words, the game matrix for $\mG$ is obtained by taking the tensor product of the game matrices for $\mG_1$ and $\mG_2$. (Make sure that you understand the difference between this definition and the definition of $\mG_1\wedge \mG_2$. In particular, recall that the game predicate $V$ is $\{0,1\}$-valued, whereas the game matrix $G$ is real-valued.)
 \begin{enumerate}
 \item[6.] Verify that $\beta^*(\mG_1\oplus \mG_1) \geq \beta^*(\mG_1)\beta^*(\mG_2)$. 
