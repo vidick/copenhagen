@@ -171,9 +171,9 @@ By definition of the set of classical strategies, extreme points are determinist
 \end{proof}
 
 \begin{example}\label{ex:chsh-beta}
-The bias the CHSH game can be evaluated exactly: 
+The bias of the CHSH game can be evaluated exactly: 
  $$ \beta(\mG_\CHSH)=\max_{a_i,b_j\in\{\pm 1\}}\sum_{i,j}\pi(i,j)c_{ij}a_ib_j=\max\frac{1}{4}(a_1b_1+a_1b_2+a_2b_1-a_2b_2)= \frac{1}{2}\;.  $$
-	So the maximum success probability of classical strategies in the game  
+	So the maximum success probability of classical strategies in the game  is
 	$$\omega(G) \,=\, \frac{1}{2} + \frac{1}{2}\, \beta(G) \,=\, \frac{3}{4}\;.$$
 \end{example}
 
@@ -194,14 +194,14 @@ A binary observable is a Hermitian matrix $X\in \C^{d\times d}$ such that $X=X^\
 Let $(\ket{\psi},\{A_{i,a}\},\{B_{j,b}\})$ be a quantum strategy for an XOR game $G$. Fixing a pair of questions $(i,j)$, the product of the outcomes $(a,b)$ returned by this strategy to $(i,j)$ has expectation
 \begin{align*}
 \Es{}[a\cdot b] &= \Pr\big( (a,b)=(0,0) \big) + \Pr\big( (a,b)=(1,1) \big) - \Pr\big( (a,b)=(0,1) \big)  - \Pr\big( (a,b)=(1,0) \big) \\
-&=  \bra{\psi} A_{x,0} \otimes B_{y,0} \ket{\psi} + \bra{\psi} A_{x,1} \otimes B_{y,1} \ket{\psi} - \bra{\psi} A_{x,0} \otimes B_{y,1} \ket{\psi} - \bra{\psi} A_{x,1} \otimes B_{y,0}\ket{\psi}\\
-&=  \bra{\psi}A_x \otimes A_y \ket{\psi} \,\in\,[-1,1]\;,
+&=  \bra{\psi} A_{i,0} \otimes B_{j,0} \ket{\psi} + \bra{\psi} A_{i,1} \otimes B_{j,1} \ket{\psi} - \bra{\psi} A_{i,0} \otimes B_{j,1} \ket{\psi} - \bra{\psi} A_{i,1} \otimes B_{j,0}\ket{\psi}\\
+&=  \bra{\psi}A_i \otimes A_j \ket{\psi} \,\in\,[-1,1]\;,
 \end{align*}
-where $A_x = A_{x,0}-A_{x,1}$ and $B_y=B_{y,0}-B_{y,1}$. Note that $A_x,B_y$ are Hermitian and satisfy $\|A_x\|,|B_y\|\leq 1$. Moreover any Hermitian $X$ can be written as $X=X_0-X_1$ where $X_0+X_1=\Id$ by letting $X_0 = \frac{1}{2}(\Id+X)$ and $X_1=\frac{1}{2}(\Id-X)$. Therefore, the quantum bias $\beta^*(\mG)$ is 
+where $A_i = A_{i,0}-A_{i,1}$ and $B_j=B_{j,0}-B_{j,1}$. Note that $A_i,B_j$ are Hermitian and satisfy $\|A_i\|,|B_j\|\leq 1$. Moreover any Hermitian $X$ can be written as $X=X_0-X_1$ where $X_0+X_1=\Id$ by letting $X_0 = \frac{1}{2}(\Id+X)$ and $X_1=\frac{1}{2}(\Id-X)$. Therefore, the quantum bias $\beta^*(\mG)$ is 
 \begin{equation}\label{eq:qbias-1}
-\beta^*(\mG) \,=\, \sup_{\ket{\psi},\{A_x\},\{b_y\}} \sum_{i,j} \,G_{ij}\, \bra{\psi} A_x \otimes B_y \ket{\psi}\;,
+\beta^*(\mG) \,=\, \sup_{\ket{\psi},\{A_i\},\{b_j\}} \sum_{i,j} \,G_{ij}\, \bra{\psi} A_i \otimes B_j \ket{\psi}\;,
 \end{equation}
-where the supremum is taken over all states $\ket{\psi}\in \mH_A\otimes \mH_B$ and Hermitian $A_x,B_y$ such that $\|A_x\|,\|B_y\|\leq 1$. Observe that~\eqref{eq:qbias-1} is linear in any given eigenvalue of any given $A_x$ or $B_y$, all other parameters (including the eigenbasis) being fixed. This means that the supremum is achieved at $A_x,B_y$ that are observables. We just proved the following lemma.
+where the supremum is taken over all states $\ket{\psi}\in \mH_A\otimes \mH_B$ and Hermitian $A_i,B_j$ such that $\|A_i\|,\|B_j\|\leq 1$. Observe that~\eqref{eq:qbias-1} is linear in any given eigenvalue of any given $A_i$ or $B_j$, all other parameters (including the eigenbasis) being fixed. This means that the supremum is achieved at $A_i,B_j$ that are observables. We just proved the following lemma.
 
 \begin{lemma}
 For any XOR game $\mG$, 
@@ -312,7 +312,7 @@ We introduce a second family of nonlocal games that has been extensively studied
 
 A Binary Linear System (BLS) is specified by a collection of \emph{variables} $v_1,\ldots,v_n$ ranging in $\{\pm 1\}$ and a collection of $m$ \emph{equations} $(E_1,c_1),\ldots,(E_m,c_m)$ such that for each $j\in\{1,\ldots,m\}$, $E_j \subseteq \{1,\ldots,n\}$ and $c_j\in\{\pm 1\}$. Informally, this is interpreted as the constraint $\prod_{\ell\in E_j} v_\ell = c_j$. In particular, we say that the BLS is \emph{classically satisfiable} if there exists a $\pm1$ assignment to the $v_j$ such that all constraints are satisfied. 
 
-Given a BLS $\{(E_j,c_j)\}$, we associate to it a game which is played as follows. Questions to Alice are indexed by equations, $j\in \{1,\ldots,m\}$, and questions to Bob are indexed by variables, $i\in \{1,\ldots,n\}$. 
+Given a BLS $\{(E_j,c_j)\}$, we associate to it a game which is played as follows. We give an ``operational'' description, from which the question distribution $\pi$ and game predicate $V$ can easily be recovered. Questions to Alice are indexed by equations, $j\in \{1,\ldots,m\}$, and questions to Bob are indexed by variables, $i\in \{1,\ldots,n\}$. The referee selects a $j$ uniformly at random, and an $i\in E_j$ uniformly at random. She sends $j$ to Alice and $i$ to Bob. 
 Upon receiving question $j$, Alice is expected to return an assignment to all variables appearing in $E_j$; so, $\mA=\{-1,1\}^k$ where $k$ is the maximum number of variables appearing in any given constraint (which we  assume to be a constant for simplicity). Upon receiving question $i$, Bob  is expected to return an assignment to variable $v_i$, so $\mB=\{-1,1\}$.  The game predicate $V(i,j,a,b)=1$ if and only if the assignment $a$ satisfies $E_j$, i.e.\ $\prod_\ell a_\ell = c_j$ (``equation check''), and moreover it is consistent with $b$, i.e.\ the value that $a$ assigns to variable $i$ matches $b$ (``consistency check''). 
 
 
@@ -353,7 +353,7 @@ Suppose given an operator solution $Y_1,\ldots,Y_n$ to a BLS $(E,c)$ such that e
 \begin{itemize}
 \item The players share the \emph{maximally entangled} state 
 \begin{equation}\label{eq:psi-bls}
- \ket{\phi_d}_{\reg{AB}} = \frac{1}{\sqrt{d}} \sum_{i} \ket{i}_{\reg{A}} \otimes \ket{i}_{\reg{B}} \in \mH_\reg{A} \otimes \mH_\reg{B}\;,
+ \ket{\phi_d} = \frac{1}{\sqrt{d}} \sum_{i} \ket{i} \otimes \ket{i} \in \mH_\reg{A} \otimes \mH_\reg{B}\;,
 \end{equation}
  where $d$ is the dimension of $\mH$, each of $\mH_\reg{A}$ and $\mH_\reg{B}$ is a copy of $\mH$, and $\{\ket{i}\}$ an orthonormal basis for it.\footnote{The maximally entangled state is a natural generalization of the EPR pair which can be defined on any tensor product of (finite-dimensional) isomorphic Hilbert spaces.}
 \item On question $j$, Alice sequentially measures the observables $Y_{j_1},Y_{j_2},\ldots,Y_{j_k}$ on her share of $\ket{\psi}$, where $j_1,\ldots,j_k$ are the elements of $E_j$. She obtains outcomes $a_1,\ldots,a_k$ that she returns as her answer. 
@@ -368,7 +368,7 @@ The main ingredient of the proof is the relation~\eqref{eq:me-trace}.  Using thi
 \begin{itemize}
 \item For the consistency check, we note that the probability that the two players return consistent answers on question $(j,k)$ is 
 \[ \frac{1}{2}+\frac{1}{2}\bra{\psi} Y_{j_k} \otimes Y_{j_k}^T \ket{\psi} \,=\, \frac{1}{2}+\frac{1}{2}\frac{1}{d} \Tr\big(Y_{j_k}^2\big) \,=\, 1\;,\]
-where the first equality follows from~\eqref{eq:me-ab} and the second holds since $Y_{j_k}$ is a binary observable so $Y_{j_k}^2 = \Id$. 
+where the first equality follows from~\eqref{eq:me-trace} and the second holds since $Y_{j_k}$ is a binary observable so $Y_{j_k}^2 = \Id$. 
 \item For the equation check, we note that the probability that Alice's answers satisfy the check for the $j$-th equation is 
 \[ \frac{1}{2}+\frac{c_j}{2}\bra{\psi}  Y_{j_1}\cdots Y_{j_k}\otimes \Id \ket{\psi} \,=\,\frac{1}{2}+\frac{c_j}{2} \bra{\psi} c_j\Id\otimes \Id  \ket{\psi}\,=\,1\;,\]
 where the first equality holds since $Y_{j_1}\cdots Y_{j_k} =c_j\Id$ by definition of an operator solution.
@@ -408,7 +408,7 @@ Suppose that $\ket{\psi}$ is a bipartite state and $A,B$ observables such that $
 \end{claim}
 
 \begin{proof}[Proof sketch]
-Let $K = \sum_t \lambda_t \ket{u_t}\bra{v_t}$. Then the equality $\bra{\psi} A\otimes B \ket{\psi} = 1$ is equivalent to $AKB^T = K$. Identifying left and right eigenspaces we see that $A$ and $B$ must each preserve the eigenspaces of $K$ associated with any given eigenvalue. Thus $AKB^T = K$ decomposes in block form $\oplus_\lambda  A_\lambda B_\lambda^T = \Id_\lambda$, where for each block we indicated with a subscript $\lambda$ the restriction of each operator to the eigenspace of $K$ associated with eigenvalue $\lambda$. This shows the claim.  
+Let $K = \sum_t \lambda_t \ket{u_t}\bra{v_t}$. Then the equality $\bra{\psi} A\otimes B \ket{\psi} = 1$ implies that $\ket{\psi} = A\otimes B \ket{\psi}$, because $A,B$ have norm at most $1$. Rearranging indices, this equality is equivalent to $K = AKB^T $. Identifying left and right eigenspaces we see that $A$ and $B$ must each preserve the eigenspaces of $K$ associated with any given eigenvalue. Thus $AKB^T = K$ decomposes in block form $\oplus_\lambda  A_\lambda B_\lambda^T = \Id_\lambda$, where for each block we indicated with a subscript $\lambda$ the restriction of each operator to the eigenspace of $K$ associated with eigenvalue $\lambda$. This shows the claim.  
 \end{proof}
 
 Using Claim~\ref{claim:ab-state} and the implications of the form~\eqref{eq:bcs-tensor-2} for the consistency checks,~\eqref{eq:bcs-tensor-1} follows, where the operators and the transpose should be understood to be written with respect to the Schmidt bases of $\ket{\psi}$. To conclude we claim that $B_1^T,\ldots,B_9^T$ (precisely, their restriction to the support of $\ket{\psi}$ on $\mH_\reg{B}$) are an operator solution to the Magic Square. Commutation in each row or column follows from~\eqref{eq:bcs-tensor-1} and the definition of the $A_y$ (which by definition commute by rows) and $A'_y$ (by columns). The constraints follow from the fact that e.g. for the first row, $\bra{\psi} A_1 A_2 A_3 \otimes \Id\ket{\psi} = +1$, which using Claim~\ref{claim:ab-state}  implies that $A_1A_2A_3 = \Id$ and hence $B_1^T B_2^T B_3^T = \Id$. (Of course we could remove the transpose signs and still have a valid solution.)

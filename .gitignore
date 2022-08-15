@@ -1,0 +1,12 @@
+
+*.aux
+
+*.bbl
+
+*.blg
+
+*.out
+
+*.pdf
+
+*.synctex
