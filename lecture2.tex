@@ -116,11 +116,11 @@ Now let's see what this all has to do with the CHSH game. We will use our newfou
 \begin{theorem}\label{thm:rigid-chsh}
 Let $\eps>0$, and suppose that a strategy for the players  in the CHSH game, using  a bipartite state $\ket{\psi}\in\C^d\otimes \C^d$ and observables $A_0,A_1$ for Alice and $B_0,B_1$ for Bob, achieves a bias at least $\sqrt{2}/2-\eps$ in the game. Then there are local isometries $V_A,V_B:\C^d \to \C^2 \otimes \C^{d'}$ such that 
 \begin{equation}\label{eq:chsh-state}
-\big\| V_A \otimes V_B \ket{\psi} - \frac{1}{\sqrt{2}}\big(\ket{00}+\ket{11}\big) \otimes \ket{\psi'} \big\|^2 = O(\sqrt{\eps}) \;,
+\big\| V_A \otimes V_B \ket{\psi} - \frac{1}{\sqrt{2}}\big(\ket{00}+\ket{11}\big) \otimes \ket{\psi'} \big\| = O(\sqrt{\eps}) \;,
 \end{equation}
 and 
 \begin{equation}\label{eq:chsh-alice}
-\big\|( V_A \otimes V_B)( A_0 \otimes \Id )\ket{\psi} - (\sigma_X \otimes \Id)\frac{1}{\sqrt{2}}(\ket{00}+\ket{11}) \otimes \ket{\psi'} \big\|^2 \,=\, O\big(\sqrt{\eps}\big)\;,
+\big\|( V_A \otimes V_B)( A_0 \otimes \Id )\ket{\psi} - (\sigma_X \otimes \Id)\frac{1}{\sqrt{2}}(\ket{00}+\ket{11}) \otimes \ket{\psi'} \big\|\,=\, O\big(\sqrt{\eps}\big)\;,
 \end{equation}
 and a similar relation holds with $A_0$ replaced by $A_1$ and $\sigma_X$ replaced by $\sigma_Z$. Moreover, analogous relations hold for Bob's observables. 
 \end{theorem}
@@ -157,15 +157,17 @@ Applying the theorem, there must exist an exact representation of $\mP$ to which
 
 Finally we need to verify the condition on $\ket{\psi}$. Note that by assumption 
 $$ \frac{1}{4}\bra{\psi} A_0 \otimes B_0 + A_0 \otimes B_1 + A_1 \otimes B_0 - A_1\otimes B_1 \ket{\psi} \geq \frac{\sqrt{2}}{2} - \eps\;,$$
-which using~\eqref{eq:chsh-alice} implies 
-$$ \frac{1}{4} \bra{\psi}(V_A\otimes V_B)^\dagger \big( (\sigma_X \otimes H + \sigma_X \otimes G + \sigma_Z \otimes H - \sigma_Z\otimes G)\otimes\Id\big) (V_A\otimes V_B)\ket{\psi} \geq \frac{\sqrt{2}}{2} - O(\sqrt{\eps})\;,$$
-i.e. 
+which implies (using $\|A_0 \otimes B_0 + A_0 \otimes B_1 + A_1 \otimes B_0 - A_1\otimes B_1\|\leq 2\sqrt{2}$, as was proved earlier) 
+\[ \bra{\psi}\Big( \frac{1}{2} A_0\otimes \frac{1}{\sqrt{2}}(B_0+B_1) +\frac{1}{2} A_1 \otimes \frac{1}{\sqrt{2}}(B_0-B_1)-\Id\otimes\Id\Big)^2\ket{\psi} \,=\, O(\eps)\;.\]
+Using the conclusion of Theorem~\ref{thm:gh} and the triangle inequality we obtain (re-arranging tensor factors) 
+\[ \bra{\psi}(V_A\otimes V_B)^*\Big( \frac{1}{2} \sigma_X\otimes \frac{1}{\sqrt{2}}(G+H)\otimes \Id +\frac{1}{2} \sigma_Z \otimes \frac{1}{\sqrt{2}}(G-H)\otimes \Id-\Id\otimes\Id\otimes \Id\Big)^2(V_A\otimes V_B)\ket{\psi} \,=\, O(\eps)\;.\]
+Expanding the square, this implies
 \begin{equation}\label{eq:xz-v}
-\frac{1}{2}\bra{\psi}(V_A\otimes V_B)^\dagger \big( (\sigma_X \otimes \sigma_X + \sigma_Z \otimes \sigma_Z )\otimes \Id\big)(V_A\otimes V_B)\ket{\psi} \geq 1 - O(\sqrt{\eps})\;.
+\frac{1}{2}\bra{\psi}(V_A\otimes V_B)^\dagger \big( (\sigma_X \otimes \sigma_X + \sigma_Z \otimes \sigma_Z )\otimes \Id\big)(V_A\otimes V_B)\ket{\psi} \geq 1 - O({\eps})\;.
 \end{equation}
 Now observe that $\frac{1}{2}(\sigma_X \otimes \sigma_X + \sigma_Z \otimes \sigma_Z )$ is an observable with a single eigenvalue $1$, with associated eigenvector $\ket{\phi_2}$, and all other eigenvalues equal to $0$ or $-1$. Therefore,~\eqref{eq:xz-v} implies 
-\[ \big\|\big(\bra{\phi_2}\otimes \Id\big)(V_A\otimes V_B)|\psi\rangle\big\|^2 \,\geq\, 1-O(\sqrt{\eps})\;,\]
-which means that $(V_A\otimes V_B)|\psi\rangle = \ket{\phi_2} \otimes \ket{\psi'} + \ket{\psi''}$ for some sub-normalized states $\ket{\psi'}$ and $\ket{\psi''}$ such that $\|\ket{\psi''}\|^2 = O(\sqrt{\eps})$. This proves the theorem. 
+\[ \big\|\big(\bra{\phi_2}\otimes \Id\big)(V_A\otimes V_B)|\psi\rangle\big\|^2 \,\geq\, 1-O({\eps})\;,\]
+which means that $(V_A\otimes V_B)|\psi\rangle = \ket{\phi_2} \otimes \ket{\psi'} + \ket{\psi''}$ for some sub-normalized states $\ket{\psi'}$ and $\ket{\psi''}$ such that $\|\ket{\psi''}\|^2 = O({\eps})$. This proves the theorem. 
 \end{proof}
 
 \section{Rigidity for the Magic Square game}
