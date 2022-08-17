@@ -1,0 +1,40 @@
+\chapter{}
+
+
+\begin{exercise}[A useful property of the CHSH game]
+Suppose that Alice and Bob play in the CHSH game using the optimal strategy. In particular, they share an EPR pair $\ket{\textsc{EPR}}$, Alice measures using $A_0 = \sigma_X$ and $A_1 = \sigma_Z$. 
+\begin{enumerate}
+\item Instead of sending a uniformly random pair of questions $(x,y)\in\{0,1\}^2$ to the players, the referee sends a uniformly random $x\in \{0,1\}$ to Alice only, and obtains her answer $a\in \{0,1\}$. Then, the referee sends (the same) $x$ to Bob and asks him to guess what answer $a$ Alice provided. What is Bob's maximum success probability (on average over the choice of $x$, Alice's answer, and any measurement Bob makes to produce his guess)? 
+\item Answer the same question but now in the first part Bob is sent a uniformly random $y$ and returns his answer $b$ (still using the optimal CHSH strategy); in the second part he is sent the same $x$ as Alice was sent in the first part, and needs to guess Alice's answer $a$ from the first part. 
+\end{enumerate}
+We now allow Alice and Bob to use an arbitrary strategy in the following two-round game. In the first round, they are provided uniformly random $(x,y)$ as in the CHSH game, and asked to return answers $(a,b)$. In the second round, Bob is given $x$ and returns $b'$. 
+\begin{enumerate}
+\item[.3] Suppose that the player's answers $(a,b)$ in the first round satisfy the CHSH winning condition with probability $\frac{1}{2}+\frac{1}{4}\sqrt{2}-\eps$, for some $\eps\geq 0$. Bound the maximum probability with which Bob can achieve $b'=a$, as a function of $\eps$. 
+\end{enumerate}
+This exercise demonstrates that using the CHSH game, it is possible to ``force'' Alice to generate a uniformly random bit, $a$, such that moreover it is impossible for Bob to ``guess'' what the value of $a$ is (after he has returned his own answer). 
+\end{exercise}
+
+\begin{exercise}[Non-signaling games]
+A strategy $p=(p(a,b|x,y))$ in a nonlocal game $G$ is called \emph{non-signaling} if  for every $a,b,x,x',y,y'$ it holds that 
+\[ \sum_{a} p(a,b|x,y) = \sum_{a} p(a,b|x',y) \quad\text{and}\quad \sum_{b} p(a,b|x,y) = \sum_{b} p(a,b|x,y')\;.\]
+\begin{enumerate}
+\item Show that any non-signaling strategy that is also deterministic is classical.
+\item Show that for every XOR game there is a non-signaling strategy which achieves a perfect bias $\beta=1$.  
+\item Deduce that there are strategies that are non-signaling but are not quantum. 
+\end{enumerate}
+Analogously to the definition of the complexity classes MIP and MIP$^*$ we can define a complexity class MIP$^{ns}$, where the provers may employ any strategy that is non-signaling. 
+
+Recall that a \emph{linear program} is an optimization problem of the form 
+\begin{align*}
+\max \quad & c^T x \\ 
+\text{s.t.} \quad & Ax = b\\
+& x\geq 0\;,
+\end{align*}
+where $x\in \R^n$ is a variable vector, $c\in\Z^n$, $A\in\Z^{m\times n}$ and $b\in \Z^n$ are given, and the inequality $x\geq 0$ is taken entrywise. Recall also that given a linear program specified by $(A,b,c)$ there is an algorithm that solves it in time $\poly(m,n)$.\footnote{To be precise we should also allow a polynomial dependence on the maximum length of the binary representation of the entries of $A,b,c$.} 
+\begin{enumerate}
+\item[4.] Show that there is an algorithm that takes as input the description of a nonlocal game $G$, runs in time polynomial in the number of questions and answers in $G$, and returns the maximum success probability of any non-signaling strategy in $G$. (You may assume that the probabilities $\pi(x,y)$ are specified using rational numbers with constant-length numerator and denominator.)
+\item[5.] Show that MIP$^{ns}$ is included in EXP, the class of languages that can be decided in exponential time. 
+\end{enumerate}
+
+\end{exercise}
+
