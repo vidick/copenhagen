@@ -54,7 +54,14 @@ Gowers and Hatami~\cite{gowers2015inverse} showed that also in the case of Defin
 
 \begin{theorem}[Gowers-Hatami]\label{thm:gh}
 Let $G$ be a finite group, $\eps\geq 0$, and $f:G\to U_d(\C)$ an $(\eps,\sigma)$-representation of $G$. Then there exists a $d'\geq d$, an isometry $V:\C^d\to \C^{d'}$, and a representation $g:G\to U_{d'}(\C)$ such that 
-$$\Es{x\in G}\, \big\| f(x) - V^*g(x)V \big\|_\sigma^2\, \leq\, 2\,\eps.$$ 
+\begin{equation}\label{eq:gh-ccl}
+\Es{x\in G}\, \big\| f(x) - V^*g(x)V \big\|_\sigma^2\, \leq\, 2\,\eps\;.
+\end{equation} 
+Furthermore, if $f$ is a homomorphism with respect to the action by left multiplication of a subgroup $H$ of $G$, i.e.\
+\begin{equation}\label{eq:gh-sbgp}
+ \forall \sigma\in H\;,\forall x\in G\;,\qquad f(\sigma  x)=f(\sigma) f(x)\;,
+\end{equation}
+then $f_{|H}$ is a representation of $H$ such that for any representation $\varphi$ of $G$, if the irrep decompositions of $\varphi_{|H}$ and $f_{|H}$ have no irrep in common, then $\varphi$ has zero support in the decomposition of $g$.\footnote{The ``Furthermore,'' part of the theorem is due to Yuming Zhao, whom I thank for the observation and its proof.}
 \end{theorem}
 
 Gowers and Hatami limit themselves to the case of $\sigma = d^{-1}I_d$, which corresponds to the dimension-normalized Frobenius norm. In this scenario they in addition obtain a tight control of the dimension $d'$, and show that one can always take $d'\ = (1+O(\eps))d$ in the theorem. We will see a much shorter proof than theirs (our proof is inspired from the mroe general argument in~\cite{de2017operator}) that does not seem to allow to recover this estimate. 
@@ -82,8 +89,22 @@ for any $x\in G$, where here $\delta_{xe}$ is the Kronecker $\delta$. Note that 
 Our first step is to define an isometry $V:\C^d \to \C^d \otimes (\oplus_\rho \C^{d_\rho} \otimes \C^{d_\rho})$ by
 $$ V :\;u \in \C^d \,\mapsto\, \bigoplus_\rho \,d_\rho^{1/2} \sum_{i=1}^{d_\rho} \,\big(\hat{f}(\rho) (u\otimes e_i)\big) \otimes e_i,$$
 where the direct sum ranges over all irreducible representations $\rho$ of $G$ and $\{e_i\}$ is the canonical basis. 
-Note what $V$ does: it ``embeds'' any vector $u\in \C^d$ into a direct sum, over irreducible representations $\rho$, of a $d$-dimensional vector of $d_\rho\times d_\rho$ matrices. Each (matrix) entry of this vector can be thought of as the Fourier coefficient of the corresponding entry of the vector $f(x)u$ associated with $\rho$. 
-The fact that $V$ is an isometry follows from the appropriate extension of Parseval's formula:  
+Note what $V$ does: it ``embeds'' any vector $u\in \C^d$ into a direct sum, over irreducible representations $\rho$, of a $d$-dimensional vector of $d_\rho\times d_\rho$ matrices. Each (matrix) entry of this vector can be thought of as the Fourier coefficient of the corresponding entry of the vector $f(x)u$ associated with $\rho$. Next define 
+$$g(x) = \bigoplus_\rho \,\big(I_d \otimes I_{d_\rho} \otimes \rho(x)\big), $$
+a direct sum over all irreducible representations of $G$ (hence itself a representation). 
+
+Note that if~\eqref{eq:gh-sbgp} holds for some subgroup $H$ of $G$, then for any $\sigma \in H$ and any representation $\rho$ of $G$,
+\begin{align}
+\hat{f}(\rho) &= \Es{x\in G} f(x)\otimes \overline{\rho(x)}\notag\\
+&= \big(f(\sigma)^{-1} \otimes \Id\big)\Big(\Es{x\in G} f(\sigma x)\otimes \overline{\rho(x)}\Big)\notag\\
+&= \big(f(\sigma)^{-1} \otimes \Id\big)\Big(\Es{x\in G} f(x)\otimes \overline{\rho(\sigma^{-1} x)}\Big)\notag\\
+&= \big(f(\sigma)^{-1} \otimes \overline{\rho(\sigma)^{-1}}\big)\Big( \Es{x\in G} f(x)\otimes \overline{\rho( x)}\Big)\;.\label{eq:sbgp-1}
+\end{align}
+Since by assumption $f_{|H}$ is a representation of $H$, 
+\[\widehat{f_{|H}}(\rho_{|H}) \,=\,\Es{\sigma\in H} f(\sigma)\otimes \overline{\rho(\sigma)}\;, \]
+which is zero whenever $\rho_{|H}$ has support only on irreducible representations $\tau$ of $H$ for which $ \widehat{f_{|H}}(\tau)=0$. In such cases, using~\eqref{eq:sbgp-1} we get that $\hat{f}(\rho)=0$. Whenever $\hat{f}(\rho)$ is zero then the corresponding term can be removed from the definition of $V$ and of $g$ without changing the calculations that follow. 
+
+Firstly, the fact that $V$ is an isometry follows from the appropriate extension of Parseval's formula:  
 \begin{eqnarray*}
 & V^* V &= \sum_\rho d_\rho \sum_i (I\otimes e_i^*) \hat{f}(\rho)^*\hat{f}(\rho) (I\otimes e_i)\\
 &&= \Es{x,y}\,  f(x)^*f(y) \sum_\rho d_\rho \sum_i  (e_i^* \rho(x)^T \overline{\rho(y)} e_i)\\
@@ -91,9 +112,7 @@ The fact that $V$ is an isometry follows from the appropriate extension of Parse
 \end{eqnarray*}
 where for the second line we used the definition \eqref{eq:fourier} of $\hat{f}(\rho)$ and  for the third we used \eqref{eq:ortho} and the fact that $f$ takes values in the unitary group.
 
-Next define
-$$g(x) = \bigoplus_\rho \,\big(I_d \otimes I_{d_\rho} \otimes \rho(x)\big), $$
-a direct sum over all irreducible representations of $G$ (hence itself a representation). Lets' first compute the ``pull-back'' of $g$ by $V$: following a similar calculation as above, for any $x\in G$, 
+Secondly, we can compute the ``pull-back'' of $g$ by $V$ as follows. Using a similar calculation as above, for any $x\in G$, 
 \begin{eqnarray*}
 & V^*g(x) V  &=  \sum_{\rho}  d_\rho \sum_{i,j} (I\otimes e_i^*)\hat{f}(\rho)^* \hat{f}(\rho)(I\otimes e_j) \otimes e_i^* \rho(x) e_j ) \\
 && =  \Es{z,y}\,  f(z)^*f(y)  \sum_{\rho}  d_\rho \sum_{i,j} (e_i^* \rho(z)^T \overline{\rho(y)} e_j) \big( e_i^* \rho(x) e_j \big) \\
@@ -151,9 +170,9 @@ Now here comes the key observation. Consider the $8$-element group $\mP$ generat
 $$\mP\,=\,\pm\big\{ \Id,\, \sigma_X,\,\sigma_Z,\, \sigma_X\sigma_Z\big\}\;.$$
 Then we claim that $A_0$ and $A_1$ induce an approximate representation of $\mP$, by setting 
 $$ f(\pm \Id)=\pm\Id,\quad f(\pm\sigma_X)=\pm A_0,\quad\quad f(\pm\sigma_Z)=\pm A_1,\quad f(\pm\sigma_X\sigma_Z) = \pm A_0A_1\;.$$
-Note that this is a legal definition, since $A_0$, $A_1$, and $A_0A_1$ are all unitary. Moreover, using only~\eqref{eq:a-ac} and the fact that $A_0$ and $A_1$ are observables, it is immediate to verify that the conditions of Theorem~\ref{thm:gh} are satisfied, i.e. $f$ is an $(O({\eps}),\rho_A)$-representation of $\mP$. 
+Note that this is a legal definition, since $A_0$, $A_1$, and $A_0A_1$ are all unitary. Moreover, using only~\eqref{eq:a-ac} and the fact that $A_0$ and $A_1$ are observables, it is immediate to verify that the conditions of Theorem~\ref{thm:gh} are satisfied, i.e. $f$ is an $(O({\eps}),\rho_A)$-representation of $\mP$. Moreover, for $H=\{-1,1\}\subseteq \mP$, we have that $f(\sigma x)=f(\sigma)f(x)$ for all $\sigma\in H$ and $x\in G$, and moreover $f_{|H}$ has zero support on the trivial representation $-1\mapsto 1$ of $H$. 
 
-Applying the theorem, there must exist an exact representation of $\mP$ to which $f$ is close. However, the representation theory of $\mP$ is not complicated. It has four $1$-dimensional representations, but all of them map $-\Id$ to $1$, so they cannot be close to $f$. Hence we are left with the unique irreducible $2$-dimensional representation of $\mP$, which is precisely given by the Pauli matrices! With a little more careful work, this shows~\eqref{eq:chsh-alice}. Moreover, we can apply the  same considerations to Bob's operators $B_0$ and $B_1$, except that here we will choose to rotate the representation so that it sends $\sigma_X$ to the Hadamard matrix $H$ and $\sigma_Z$ to the matrix $G$. This is another valid representation; it is the same as the standard one, but rotated. 
+Applying the theorem, there must exist an exact representation of $\mP$ to which $f$ is close. However, the representation theory of $\mP$ is not complicated. It has four $1$-dimensional representations, but all of them map $-\Id$ to $1$, so by the ``furthermore'' part of Theorem~\ref{thm:gh} we can assume that they do not appear in the irrep decomposition of the representation $g$ guaranteed in the theorem. Hence we are left with the unique irreducible $2$-dimensional representation of $\mP$, which is precisely given by the Pauli matrices! With a little more careful work, this shows~\eqref{eq:chsh-alice}. Moreover, we can apply the  same considerations to Bob's operators $B_0$ and $B_1$, except that here we will choose to rotate the representation so that it sends $\sigma_X$ to the Hadamard matrix $H$ and $\sigma_Z$ to the matrix $G$. This is another valid representation; it is the same as the standard one, but rotated. 
 
 Finally we need to verify the condition on $\ket{\psi}$. Note that by assumption 
 $$ \frac{1}{4}\bra{\psi} A_0 \otimes B_0 + A_0 \otimes B_1 + A_1 \otimes B_0 - A_1\otimes B_1 \ket{\psi} \geq \frac{\sqrt{2}}{2} - \eps\;,$$
